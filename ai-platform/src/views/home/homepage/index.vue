@@ -2,12 +2,13 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 11:13:54
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-03-26 16:25:20
+ * @LastEditTime: 2023-03-28 14:54:54
  * @FilePath: \项目\AIplatform\ai-platform\src\views\home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div class="mainbox">
+    <Breadcrumb :items="['menu.home']" />
     <div class="header">
       <a-carousel
         :autoPlay="true"
@@ -25,9 +26,9 @@
           :style="{ width: '60%' }"
           :key="index"
         >
-          <a v-for="(link, index) in links" :href="link" :key="index">
+          <a :href="image.link" :key="index">
             <img
-              :src="image"
+              :src="image.img"
               :style="{
                 width: '100%',
               }"
@@ -89,12 +90,20 @@
 
 <script lang="ts" setup>
 const images = [
-  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
-  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
-  'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp',
+  {
+    img: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
+    link: '/exception/404',
+  },
+  {
+    img: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/6480dbc69be1b5de95010289787d64f1.png~tplv-uwbnlip3yd-webp.webp',
+    link: '/exception/403',
+  },
+  {
+    img: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/0265a04fddbd77a19602a15d9d55d797.png~tplv-uwbnlip3yd-webp.webp',
+    link: '/exception/500',
+  },
 ];
 
-const links = ['/exception/404', 'exception/403', 'exception/500'];
 const tabs = [
   { name: 'OCR文字识别', des: '这是OCR文字识别' },
   { name: 'OCR转Excel', des: '这是转文字功能' },
@@ -108,7 +117,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.mainbox {
+  padding: 0 20px 20px 20px;
+  height: calc(100% - 40px);
+}
 .header {
   margin-top: 20px;
 }

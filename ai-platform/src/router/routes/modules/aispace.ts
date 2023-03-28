@@ -23,15 +23,15 @@ const AISPACE: AppRouteRecordRaw = {
       },
     },
     {
-        path: 'scene',
-        name: 'scene',
-        component: () => import('@/views/aispace/scene/index.vue'),
-        meta: {
-          locale: 'menu.aispace.scene',
-          requiresAuth: true,
-          roles: ['*'],
-        },
+      path: 'scene',
+      name: 'scene',
+      component: () => import('@/views/aispace/scene/index.vue'),
+      meta: {
+        locale: 'menu.aispace.scene',
+        requiresAuth: true,
+        roles: ['*'],
       },
+    },
   ]
 };
 

@@ -5,6 +5,8 @@ import localeHome from '@/views/home/locale/zh-CN';
 import localeAlgorithm from '@/views/aispace/algorithm/locale/zh-CN';
 import localeScene from '@/views/aispace/scene/locale/zh-CN';
 
+import localeTalentGroup from '@/views/talent/group/locale/zh-CN'
+
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 
 import localeMonitor from '@/views/dashboard/monitor/locale/zh-CN';
@@ -35,6 +37,7 @@ import localeSettings from './zh-CN/settings';
 export default {
   'menu.home': '首页',
   'menu.aispace': '成果展示',
+  'menu.talent': '人才库',
   'menu.dashboard': '仪表盘',
   'menu.server.dashboard': '仪表盘-服务端',
   'menu.server.workplace': '工作台-服务端',
@@ -55,6 +58,7 @@ export default {
   ...localeHome,
   ...localeAlgorithm,
   ...localeScene,
+  ...localeTalentGroup,
   ...localeWorkplace,
 
   ...localeMonitor,

@@ -103,12 +103,13 @@
       try {
         await userStore.login(values as LoginData);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
+        console.log(redirect);        
         router.push({
-          name: (redirect as string) || 'Workplace',
+          name: (redirect as string) || 'home',
           query: {
             ...othersQuery,
           },
-        });
+        });        
         Message.success(t('login.form.login.success'));
         const { rememberPassword } = loginConfig.value;
         const { username, password } = values;
@@ -117,7 +118,7 @@
         loginConfig.value.username = rememberPassword ? username : '';
         loginConfig.value.password = rememberPassword ? password : '';
       } catch (err) {
-        errorMessage.value = (err as Error).message;
+        errorMessage.value = (err as Error).message;        
       } finally {
         setLoading(false);
       }
