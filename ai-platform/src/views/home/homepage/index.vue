@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 11:13:54
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-03-28 14:54:54
+ * @LastEditTime: 2023-03-29 20:47:57
  * @FilePath: \项目\AIplatform\ai-platform\src\views\home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -66,7 +66,7 @@
           <h2 style="text-align: center">最新资讯</h2>
         </template>
         <div style="text-align: center">
-          <p>我爱宝宝</p>
+          <p>这里是最新资讯</p>
         </div>
       </a-card>
       <a-card
@@ -78,7 +78,7 @@
           <h2 style="text-align: center">AI大赛</h2>
         </template>
         <div style="text-align: center">
-          <p>我爱宝宝</p>
+          <p>这里是AI大赛</p>
           <div style="position: relative; top: 62px">
             <p><a-button type="primary">进入AI大赛</a-button> </p>
           </div>
