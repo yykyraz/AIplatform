@@ -32,6 +32,17 @@ const AISPACE: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'sceneDetail/:id',
+      name: 'sceneDetail',
+      component: () => import('@/views/aispace/scene/sceneDetail.vue'),
+      meta: {
+          locale: 'menu.scene.detail',
+          requiresAuth: true,
+          roles: ['*'],
+          hideInMenu: true,
+      },
+  },
   ]
 };
 
