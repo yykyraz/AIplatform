@@ -1,27 +1,30 @@
 <!--
  * @Author: yykyraz kk@qq.com
- * @Date: 2023-03-26 16:41:45
+ * @Date: 2023-04-01 12:41:07
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 14:55:02
- * @FilePath: \项目\AIplatform\ai-platform\src\views\aispace\scene\index.vue
+ * @LastEditTime: 2023-04-02 15:18:31
+ * @FilePath: \项目\AIplatform\ai-platform\src\views\data\classic\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
-
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.aispace.scene']" />
+    <Breadcrumb :items="['menu.data.classic']" />
     <div class="mainbox">
-      <div class="scene-banner">
+      <div class="algorithm-banner">
         <div class="header">
-          <div class="scene-info">
-            <span class="scene-title">AI场景库 </span>
-            <span class="scene-introduction">
-              在这里探索、分享和交流优质AI场景。
+          <div class="algorithm-info">
+            <span class="algorithm-title">经典数据集 </span>
+            <span class="algorithm-introduction">
+              在这里探索、分析和分享优质数据。
             </span>
           </div>
-          <a-button class="scene-addbuton" @click="handleClick" type="primary">
+          <a-button
+            class="algorithm-addbuton"
+            @click="handleClick"
+            type="primary"
+          >
             <icon-plus />
-            <span class="scene-plusword">发起场景</span>
+            <span class="algorithm-plusword">新建数据集</span>
           </a-button>
           <a-drawer
             :visible="visible"
@@ -31,7 +34,7 @@
             width="600px"
           >
             <template #title>
-              <span style="margin-left: 40px">新建场景</span>
+              <span style="margin-left: 40px">新建数据集</span>
               <span style="margin-left: 30px"
                 ><a-button @click="clearForm" type="primary"
                   >清空</a-button
@@ -39,42 +42,28 @@
               >
             </template>
             <div>
-              <a-form :model="newScene">
-                <a-form-item field="name" label="场景名称" required>
-                  <a-input v-model="newScene.name" placeholder="请输入" />
+              <a-form :model="newDataSet">
+                <a-form-item field="algorithmname" label="数据集名字" required>
+                  <a-input v-model="newDataSet.dataname" placeholder="请输入" />
                 </a-form-item>
 
                 <a-form-item field="department" label="所属部门" required>
-                  <a-input v-model="newScene.department" placeholder="请输入" />
+                  <a-input
+                    v-model="newDataSet.department"
+                    placeholder="请输入"
+                  />
                 </a-form-item>
 
                 <a-form-item field="status" label="状态">
-                  <a-select v-model="newScene.status" placeholder="请选择">
+                  <a-select v-model="newDataSet.status" placeholder="请选择">
                     <a-option value="未上传">未上传</a-option>
-                    <a-option value="标记中">标记中</a-option>
-                    <a-option value="已完成">已完成</a-option>
+                    <a-option value="已完成">已上传</a-option>
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="techtag" label="所属技术" required>
+                <a-form-item field="tags" label="数据集标签" required>
                   <a-select
-                    v-model="newScene.techtag"
-                    placeholder="请选择"
-                    multiple
-                  >
-                    <a-option value="计算机视觉">计算机视觉</a-option>
-                    <a-option value="自然语言处理">自然语言处理</a-option>
-                    <a-option value="知识图谱">知识图谱</a-option>
-                    <a-option value="异常检测">异常检测</a-option>
-                    <a-option value="推荐算法">推荐算法</a-option>
-                    <a-option value="预测算法">预测算法</a-option>
-                    <a-option value="注意力机制">注意力机制</a-option>
-                  </a-select>
-                </a-form-item>
-
-                <a-form-item field="tags" label="标签" required>
-                  <a-select
-                    v-model="newScene.tags"
+                    v-model="newDataSet.tags"
                     placeholder="请选择"
                     multiple
                   >
@@ -91,9 +80,21 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="description" label="场景描述">
+                <a-form-item field="algorithm" label="所属场景">
+                  <a-select v-model="newDataSet.scene" placeholder="请选择">
+                    <a-option v-for="(item, index) in allscene" :key="index">{{
+                      item.name
+                    }}</a-option>
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item field="class" label="所属类型" required>
+                  <a-input v-model="newDataSet.class" placeholder="请输入" />
+                </a-form-item>
+
+                <a-form-item field="description" label="描述" required>
                   <a-textarea
-                    v-model="newScene.description"
+                    v-model="newDataSet.description"
                     placeholder="请输入"
                     allow-clear
                   />
@@ -115,7 +116,7 @@
           >
             <a-input-search
               v-model="search"
-              placeholder="搜索场景"
+              placeholder="搜索数据集"
               size="large"
               allow-clear="true"
               search-button
@@ -126,14 +127,10 @@
         </div>
       </div>
       <div class="content">
-        <div class="scene-show">
-          <a-tabs v-model="tab" style="margin-top: 30px" @tab-click="TabChange">
-            <a-tab-pane key="1" title="全部场景" />
-            <a-tab-pane key="2" title="我的场景" />
-          </a-tabs>
+        <div class="algorithm-show">
           <a-list
             :grid-props="{ gutter: 1, span: 8 }"
-            :data="tab === 1 ? data : mydata"
+            :data="data"
             :bordered="false"
             style="margin-top: 24px"
           >
@@ -141,8 +138,8 @@
               <a-list-item :key="index">
                 <a-card
                   hoverable
-                  class="scene-card"
-                  @click="gotoDetail(item.sid)"
+                  class="algorithm-card"
+                  @click="gotoDetail(item.alid)"
                 >
                   <template #actions>
                     <span class="icon-hover"> <IconThumbUp /> </span>
@@ -164,8 +161,8 @@
                         }"
                         alt="dessert"
                         :src="
-                          'http://127.0.0.1:5173/src/assets/images/scene/' +
-                          item.name +
+                          'http://127.0.0.1:5173/src/assets/images/dataset/' +
+                          item.dataname +
                           '.jpg'
                         "
                       />
@@ -178,10 +175,8 @@
                     }"
                   >
                     <a-card-meta
-                      :title="item.name"
-                      :description="
-                        item.techtag.length > 0 ? item.techtag : '无'
-                      "
+                      :title="item.dataname"
+                      :description="item.tags.length > 0 ? item.tags : '无'"
                     >
                       <template #avatar>
                         <div
@@ -192,10 +187,10 @@
                           }"
                         >
                           <a-avatar :size="24" :style="{ marginRight: '8px' }">
-                            T
+                            C
                           </a-avatar>
                           <a-typography-text>{{
-                            item.tags[0]
+                            item.class
                           }}</a-typography-text>
                         </div>
                       </template>
@@ -210,8 +205,8 @@
     </div>
   </div>
 </template>
-    
-  <script lang="ts" setup>
+        
+      <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Modal } from '@arco-design/web-vue';
@@ -220,66 +215,47 @@ const router = useRouter();
 
 const data = reactive([
   {
-    sid: '1',
-    department: '信息化部',
-    description: 'OCR文字识别',
-    name: 'OCR文字识别',
-    status: '标记中',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '2',
-    department: '安全部',
-    description: 'OCR表格识别',
-    name: 'OCR表格识别',
-    status: '已完成',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '3',
-    department: '安全部',
-    description: '仪表识别',
-    name: '仪表识别',
+    alid: '1',
+    dataname: '测试',
+    class: '计算机视觉',
+    department: '流程与信息化部',
+    description: '该数据集通过固定在学校大门上的两个摄像头获得',
+    scene: {
+      sid: '1',
+      name: 'OCR文字识别',
+    },
     status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
+    tags: ['其他'],
   },
+  
 ]);
 
-const mydata = reactive([
-  {
-    sid: '',
-    department: '信息化部',
-    description: 'OCR文字识别',
-    name: 'OCR文字识别',
-    status: '标记中',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-]);
-
-const newScene = reactive({
+const newDataSet = reactive({
+  dataname: '',
   department: '',
-  description: '',
-  name: '',
   status: '',
   tags: [],
-  techtag: [],
+  scene: {
+    sid: '',
+    name: '',
+  },
+  class: '',
+  description: '',
 });
 
 const search = ref('');
 const visible = ref(false);
-const tab = ref(1);
+const allscene = reactive([{ name: '区域超员智能视频监控' }]);
 
 const clearForm = () => {
-  newScene.department = '';
-  newScene.description = '';
-  newScene.name = '';
-  newScene.status = '';
-  newScene.tags = [];
-  newScene.techtag = [];
+  newDataSet.department = '';
+  newDataSet.class = '';
+  newDataSet.scene.sid = '';
+  newDataSet.scene.name = '';
+  newDataSet.description = '';
+  newDataSet.dataname = '';
+  newDataSet.status = '';
+  newDataSet.tags = [];
 };
 
 const handleClick = () => {
@@ -296,18 +272,14 @@ const handleCancel = () => {
 
 const searchall = () => {};
 
-const TabChange = () => {
-  tab.value = -tab.value;
-};
-
-const gotoDetail = (sid: string) => {
+const gotoDetail = (alid: string) => {
   const item = data.find((item) => {
-    return item.sid === sid;
+    return item.alid === alid;
   });
   console.log(item);
   const obj = JSON.stringify(item);
   router.push({
-    path: `/aispace/sceneDetail/${sid}`,
+    path: `/algorithm/aldetail/${alid}`,
     query: { item: obj },
   });
 };
@@ -323,14 +295,14 @@ const beforeUpload = (file: { name: any }) => {
   });
 };
 </script>
-    
+        
   <script lang="ts">
 export default {
   name: '403',
 };
 </script>
-    
-    <style scoped lang="less">
+        
+  <style scoped lang="less">
 .container {
   padding: 0 20px 20px 20px;
   height: calc(100% - 40px);
@@ -341,13 +313,13 @@ export default {
 }
 
 .mainbox {
-  background-image: url('@/assets/images/background/backScene.jpg');
+  background-image: url('@/assets/images/background/backdataset.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
 }
 
-.scene-banner {
+.algorithm-banner {
   box-sizing: border-box;
   -webkit-box-pack: justify;
   justify-content: space-between;
@@ -357,19 +329,19 @@ export default {
   text-align: center;
   padding-top: 30px;
 }
-.scene-info {
+.algorithm-info {
   float: left;
   margin-left: 15%;
 }
 
-.scene-title {
+.algorithm-title {
   color: rgb(32, 33, 36);
   font-size: 40px;
   line-height: 44px;
   font-weight: bold;
   font-family: zeitung, sans-serif;
 }
-.scene-introduction {
+.algorithm-introduction {
   color: rgb(32, 33, 36);
   font-size: 18px;
   font-weight: 400;
@@ -377,7 +349,7 @@ export default {
   max-width: 485px;
   margin-top: 12px;
 }
-.scene-addbuton {
+.algorithm-addbuton {
   -webkit-box-align: center;
   align-items: center;
   background-color: #004899;
@@ -395,12 +367,12 @@ export default {
   white-space: nowrap;
   width: fit-content;
 }
-.scene-plus {
+.algorithm-plus {
   color: rgb(255, 255, 255);
   font-size: 20px;
   user-select: none;
 }
-.scene-plusword {
+.algorithm-plusword {
   color: rgb(255, 255, 255);
   font-size: 14px;
   line-height: 20px;
@@ -413,7 +385,7 @@ export default {
   width: 100%;
   margin-top: 20px;
 }
-.scene-show {
+.algorithm-show {
   width: 80%;
   margin: 0 auto;
 }
@@ -428,7 +400,7 @@ export default {
   transition: border 0.3s ease 0s;
 }
 
-.scene-card {
+.algorithm-card {
   border-radius: 16px;
   border: 1px solid rgb(218, 220, 224);
   min-width: 200px;

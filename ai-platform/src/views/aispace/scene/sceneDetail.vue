@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div>
+    <div style="margin-bottom: 15px;">
       <a-breadcrumb>
         <a-breadcrumb-item>
           <icon-apps />
         </a-breadcrumb-item>
-        <a-breadcrumb-item>人才详情</a-breadcrumb-item>
+        <a-breadcrumb-item>场景详情</a-breadcrumb-item>
         <a-breadcrumb-item>{{ detail.name }}</a-breadcrumb-item>
       </a-breadcrumb>
     </div>
@@ -19,7 +19,7 @@
               }"
               alt="dessert"
               :src="
-                'http://127.0.0.1:5173/src/assets/images/' +
+                'http://127.0.0.1:5173/src/assets/images/scene/' +
                 detail.name +
                 '.jpg'
               "
@@ -156,13 +156,13 @@ console.log(detail);
 }
 
 .mainbox {
-  background-image: url('@/assets/images/backScene.jpg');
+  background-image: url('@/assets/images/background/backScene.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
 }
 .avator {
   width: 100%;
-  margin-top: 30px;
+  padding-top: 30px;
 }
 </style>

@@ -19,7 +19,7 @@
               }"
               alt="dessert"
               :src="
-                'http://127.0.0.1:5173/src/assets/images/' +
+                'http://127.0.0.1:5173/src/assets/images/talent/' +
                 detail.name +
                 '.jpg'
               "
@@ -161,7 +161,7 @@ console.log(detail);
 }
 
 .mainbox {
-  background-image: url('@/assets/images/backTalent.jpg');
+  background-image: url('@/assets/images/background/backTalent.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
