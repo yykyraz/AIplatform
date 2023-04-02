@@ -2,23 +2,26 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 14:15:06
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 14:59:04
+ * @LastEditTime: 2023-04-02 19:16:29
  * @FilePath: \项目\AIplatform\ai-platform\src\views\algorithm\aldetail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div class="container">
-    <div style="margin-bottom: 15px">
-      <a-breadcrumb>
-        <a-breadcrumb-item>
-          <icon-apps />
-        </a-breadcrumb-item>
-        <a-breadcrumb-item>场景详情</a-breadcrumb-item>
-        <a-breadcrumb-item>{{ detail.algorithmname }}</a-breadcrumb-item>
-      </a-breadcrumb>
+    <div>
+      <a-page-header
+        title="算法详情"
+        @back="goback"
+      >
+        <template #subtitle>
+          <a-space>
+            <span>{{ detail.algorithmname }}</span>
+          </a-space>
+        </template>
+      </a-page-header>
     </div>
     <div class="mainbox">
-      <a-card :style="{ margin: '25px' }">
+      <a-card :style="{ margin: '0 25px' }">
         <div class="algorithmDetail-imgboxtop">
           <a-card
             :style="{ marginBottom: '20px' }"
@@ -188,11 +191,16 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
 const route = useRoute();
 const detail = JSON.parse(route.query.item as any);
 console.log(detail);
+
+const goback = () => {
+  router.go(-1)
+}
 
 const tab = ref(1);
 const TabChange = () => {
@@ -207,6 +215,8 @@ const gotoScenedetail = (id: string) => {
 const AlgorithmChange = (alid: string) => {
   console.log(alid);
 };
+
+
 </script>
 
 <style lang="less" scoped>

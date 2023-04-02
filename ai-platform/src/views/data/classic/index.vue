@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 12:41:07
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 15:18:31
+ * @LastEditTime: 2023-04-02 19:49:39
  * @FilePath: \项目\AIplatform\ai-platform\src\views\data\classic\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -92,6 +92,13 @@
                   <a-input v-model="newDataSet.class" placeholder="请输入" />
                 </a-form-item>
 
+                <a-form-item field="introduction" label="简介" required>
+                  <a-input
+                    v-model="newDataSet.introduction"
+                    placeholder="请输入"
+                  />
+                </a-form-item>
+
                 <a-form-item field="description" label="描述" required>
                   <a-textarea
                     v-model="newDataSet.description"
@@ -139,7 +146,7 @@
                 <a-card
                   hoverable
                   class="algorithm-card"
-                  @click="gotoDetail(item.alid)"
+                  @click="gotoDetail(item.dataid)"
                 >
                   <template #actions>
                     <span class="icon-hover"> <IconThumbUp /> </span>
@@ -215,7 +222,7 @@ const router = useRouter();
 
 const data = reactive([
   {
-    alid: '1',
+    dataid: '1',
     dataname: '测试',
     class: '计算机视觉',
     department: '流程与信息化部',
@@ -226,8 +233,8 @@ const data = reactive([
     },
     status: '未上传',
     tags: ['其他'],
+    introduction: '一个测试'
   },
-  
 ]);
 
 const newDataSet = reactive({
@@ -241,6 +248,7 @@ const newDataSet = reactive({
   },
   class: '',
   description: '',
+  introduction: '',
 });
 
 const search = ref('');
@@ -256,6 +264,7 @@ const clearForm = () => {
   newDataSet.dataname = '';
   newDataSet.status = '';
   newDataSet.tags = [];
+  newDataSet.introduction = '';
 };
 
 const handleClick = () => {
@@ -272,14 +281,14 @@ const handleCancel = () => {
 
 const searchall = () => {};
 
-const gotoDetail = (alid: string) => {
+const gotoDetail = (dataid: string) => {
   const item = data.find((item) => {
-    return item.alid === alid;
+    return item.dataid === dataid;
   });
   console.log(item);
   const obj = JSON.stringify(item);
   router.push({
-    path: `/algorithm/aldetail/${alid}`,
+    path: `/data/dataSetDetail/${dataid}`,
     query: { item: obj },
   });
 };

@@ -1,13 +1,16 @@
 <template>
   <div class="container">
     <div>
-      <a-breadcrumb>
-        <a-breadcrumb-item>
-          <icon-apps />
-        </a-breadcrumb-item>
-        <a-breadcrumb-item>人才详情</a-breadcrumb-item>
-        <a-breadcrumb-item>{{ detail.name }}</a-breadcrumb-item>
-      </a-breadcrumb>
+      <a-page-header
+        title="人才详情"
+        @back="goback"
+      >
+        <template #subtitle>
+          <a-space>
+            <span>{{ detail.name }}</span>
+          </a-space>
+        </template>
+      </a-page-header>
     </div>
     <div class="mainbox">
       <div class="avator">
@@ -136,11 +139,16 @@
 
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
+const router = useRouter();
 const route = useRoute();
 const detail = JSON.parse(route.query.item as any);
 console.log(detail);
+
+const goback = () => {
+  router.go(-1);
+}
 </script>
 
 <style scoped lang="less">
