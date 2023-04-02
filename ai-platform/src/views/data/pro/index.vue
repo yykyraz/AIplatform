@@ -131,7 +131,7 @@
                   <a-card
                     hoverable
                     class="algorithm-card"
-                    @click="gotoDetail(item.alid)"
+                    @click="gotoDetail(item.dataid)"
                   >
                     <template #actions>
                       <span class="icon-hover"> <IconThumbUp /> </span>
@@ -206,49 +206,51 @@
   const router = useRouter();
   
   const data = reactive([
-    {
-      alid: '1',
-      dataname: '测试',
-      class: '计算机视觉',
-      department: '流程与信息化部',
-      description: '该数据集通过固定在学校大门上的两个摄像头获得',
-      scene: {
-        sid: '1',
-        name: 'OCR文字识别',
-      },
-      status: '未上传',
-      tags: ['其他'],
-    },
-    
-  ]);
-  
-  const newDataSet = reactive({
-    dataname: '',
-    department: '',
-    status: '',
-    tags: [],
+  {
+    dataid: '1',
+    dataname: '测试',
+    class: '计算机视觉',
+    department: '流程与信息化部',
+    description: '该数据集通过固定在学校大门上的两个摄像头获得',
     scene: {
-      sid: '',
-      name: '',
+      sid: '1',
+      name: 'OCR文字识别',
     },
-    class: '',
-    description: '',
-  });
-  
-  const search = ref('');
-  const visible = ref(false);
-  const allscene = reactive([{ name: '区域超员智能视频监控' }]);
-  
-  const clearForm = () => {
-    newDataSet.department = '';
-    newDataSet.class = '';
-    newDataSet.scene.sid = '';
-    newDataSet.scene.name = '';
-    newDataSet.description = '';
-    newDataSet.dataname = '';
-    newDataSet.status = '';
-    newDataSet.tags = [];
-  };
+    status: '未上传',
+    tags: ['其他'],
+    introduction: '一个测试'
+  },
+]);
+
+const newDataSet = reactive({
+  dataname: '',
+  department: '',
+  status: '',
+  tags: [],
+  scene: {
+    sid: '',
+    name: '',
+  },
+  class: '',
+  description: '',
+  introduction: '',
+});
+
+const search = ref('');
+const visible = ref(false);
+const allscene = reactive([{ name: '区域超员智能视频监控' }]);
+
+const clearForm = () => {
+  newDataSet.department = '';
+  newDataSet.class = '';
+  newDataSet.scene.sid = '';
+  newDataSet.scene.name = '';
+  newDataSet.description = '';
+  newDataSet.dataname = '';
+  newDataSet.status = '';
+  newDataSet.tags = [];
+  newDataSet.introduction = '';
+};
   
   const handleClick = () => {
     visible.value = true;
@@ -264,14 +266,14 @@
   
   const searchall = () => {};
   
-  const gotoDetail = (alid: string) => {
+  const gotoDetail = (dataid: string) => {
     const item = data.find((item) => {
-      return item.alid === alid;
+      return item.dataid === dataid;
     });
     console.log(item);
     const obj = JSON.stringify(item);
     router.push({
-      path: `/algorithm/aldetail/${alid}`,
+      path: `/data/dataSetDetail/${dataid}`,
       query: { item: obj },
     });
   };
