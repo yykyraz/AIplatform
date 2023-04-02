@@ -1,11 +1,34 @@
+/*
+ * @Author: yykyraz kk@qq.com
+ * @Date: 2023-02-04 09:36:11
+ * @LastEditors: yykyraz kk@qq.com
+ * @LastEditTime: 2023-04-01 12:51:34
+ * @FilePath: \项目\AIplatform\ai-platform\src\locale\zh-CN.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+/*
+ * @Author: yykyraz kk@qq.com
+ * @Date: 2023-02-04 09:36:11
+ * @LastEditors: yykyraz kk@qq.com
+ * @LastEditTime: 2023-04-01 12:12:23
+ * @FilePath: \项目\AIplatform\ai-platform\src\locale\zh-CN.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import localeMessageBox from '@/components/message-box/locale/zh-CN';
 import localeLogin from '@/views/login/locale/zh-CN';
 
 import localeHome from '@/views/home/locale/zh-CN';
-import localeAlgorithm from '@/views/aispace/algorithm/locale/zh-CN';
-import localeScene from '@/views/aispace/scene/locale/zh-CN';
 
-import localeTalentGroup from '@/views/talent/group/locale/zh-CN'
+import localeScene from '@/views/aispace/scene/locale/zh-CN';
+import localeOcrWord from '@/views/aispace/ocrWord/locale/zh-CN';
+import localeOcrExcel from '@/views/aispace/ocrExcel/locale/zh-CN';
+
+import localeProData from '@/views/data/pro/locale/zh-CN';
+import localeClassicData from '@/views/data/classic/locale/zh-CN';
+
+import localeTalentGroup from '@/views/talent/group/locale/zh-CN';
+
+import localAlgorithm from '@/views/algorithm/locale/zh-CN';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 
@@ -36,8 +59,10 @@ import localeSettings from './zh-CN/settings';
 
 export default {
   'menu.home': '首页',
-  'menu.aispace': '成果展示',
+  'menu.aispace': 'AI应用场景',
+  'menu.data': '数据集',
   'menu.talent': '人才库',
+  'menu.algorithm': '算法',
   'menu.dashboard': '仪表盘',
   'menu.server.dashboard': '仪表盘-服务端',
   'menu.server.workplace': '工作台-服务端',
@@ -56,9 +81,13 @@ export default {
   ...localeMessageBox,
   ...localeLogin,
   ...localeHome,
-  ...localeAlgorithm,
   ...localeScene,
+  ...localeOcrWord,
+  ...localeOcrExcel,
+  ...localeProData,
+  ...localeClassicData,
   ...localeTalentGroup,
+  ...localAlgorithm,
   ...localeWorkplace,
 
   ...localeMonitor,

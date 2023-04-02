@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-02-04 09:36:11
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-03-28 15:38:03
+ * @LastEditTime: 2023-04-01 12:32:14
  * @FilePath: \项目\AIplatform\ai-platform\src\locale\en-US.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,10 +10,14 @@ import localeMessageBox from '@/components/message-box/locale/en-US';
 import localeLogin from '@/views/login/locale/en-US';
 
 import localeHome from '@/views/home/locale/en-US';
-import localeAlgorithm from '@/views/aispace/algorithm/locale/en-US';
+
 import localeScene from '@/views/aispace/scene/locale/en-US';
+import localeOcrWord from '@/views/aispace/ocrWord/locale/en-US';
+import localeOcrExcel from '@/views/aispace/ocrExcel/locale/en-US';
 
 import localeTalentGroup from '@/views/talent/group/locale/en-US'
+
+import localeAlgorithm from '@/views/algorithm/locale/en-US';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
 
@@ -65,9 +69,11 @@ export default {
   ...localeMessageBox,
   ...localeLogin,
   ...localeHome,
-  ...localeAlgorithm,
   ...localeScene,
+  ...localeOcrWord,
+  ...localeOcrExcel,
   ...localeTalentGroup,
+  ...localeAlgorithm,
   ...localeWorkplace,
 
   ...localeMonitor,
