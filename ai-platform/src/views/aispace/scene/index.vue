@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 16:41:45
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 14:55:02
+ * @LastEditTime: 2023-04-03 16:07:12
  * @FilePath: \项目\AIplatform\ai-platform\src\views\aispace\scene\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -242,6 +242,15 @@ const data = reactive([
     department: '安全部',
     description: '仪表识别',
     name: '仪表识别',
+    status: '未上传',
+    tags: ['质量', '安全', '试飞'],
+    techtag: ['计算机视觉'],
+  },
+  {
+    sid: '4',
+    department: '安全部',
+    description: '区域超员智能视频监控',
+    name: '区域超员智能视频监控',
     status: '未上传',
     tags: ['质量', '安全', '试飞'],
     techtag: ['计算机视觉'],

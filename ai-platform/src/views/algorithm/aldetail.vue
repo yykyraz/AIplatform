@@ -2,17 +2,14 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 14:15:06
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 19:16:29
+ * @LastEditTime: 2023-04-03 16:37:17
  * @FilePath: \项目\AIplatform\ai-platform\src\views\algorithm\aldetail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div class="container">
     <div>
-      <a-page-header
-        title="算法详情"
-        @back="goback"
-      >
+      <a-page-header title="算法详情" @back="goback">
         <template #subtitle>
           <a-space>
             <span>{{ detail.algorithmname }}</span>
@@ -67,9 +64,9 @@
                           fontWeight: 'bold',
                           cursor: 'pointer',
                         }"
-                        @click="gotoScenedetail(detail.scene)"
+                        @click="gotoScenedetail(detail.scene.sid)"
                       >
-                        {{ detail.scene }}</a
+                        {{ detail.scene.name }}</a
                       >
                       <span v-if="detail.scene === undefined"> 未填写 </span>
                     </a-card>
@@ -126,27 +123,34 @@
 
             <!-- 管理信息 -->
             <a-tab-pane key="2" title="管理">
-              <a-form :model="detail" :size="detail.size">
+              <a-form :model="newAlgorithm">
                 <a-form-item field="algorithmname" label="算法名字">
                   <a-input
-                    v-model="detail.algorithmname"
-                    :placeholder="detail.algorithmname"
+                    v-model="newAlgorithm.algorithmname"
+                    :placeholder="newAlgorithm.algorithmname"
                   />
                 </a-form-item>
 
                 <a-form-item field="department" label="所属部门">
-                  <a-input v-model="detail.department" placeholder="请输入" />
+                  <a-input
+                    v-model="newAlgorithm.department"
+                    placeholder="请输入"
+                  />
                 </a-form-item>
 
                 <a-form-item field="status" label="状态">
-                  <a-select v-model="detail.status" placeholder="请选择">
+                  <a-select v-model="newAlgorithm.status" placeholder="请选择">
                     <a-option value="未上传">未上传</a-option>
                     <a-option value="已完成">已上传</a-option>
                   </a-select>
                 </a-form-item>
 
                 <a-form-item field="tags" label="算法标签">
-                  <a-select v-model="detail.tags" placeholder="请选择" multiple>
+                  <a-select
+                    v-model="newAlgorithm.tags"
+                    placeholder="请选择"
+                    multiple
+                  >
                     <a-option value="质量">质量</a-option>
                     <a-option value="安全">安全</a-option>
                     <a-option value="装配">装配</a-option>
@@ -161,7 +165,10 @@
                 </a-form-item>
 
                 <a-form-item field="scene" label="所属场景">
-                  <a-select v-model="detail.scene.name" placeholder="请选择">
+                  <a-select
+                    v-model="newAlgorithm.scene.name"
+                    placeholder="请选择"
+                  >
                     <a-option v-for="(item, index) in allscene" :key="index">{{
                       item.name
                     }}</a-option>
@@ -169,11 +176,15 @@
                 </a-form-item>
 
                 <a-form-item field="class" label="算法类型">
-                  <a-input v-model="detail.class" placeholder="请输入" />
+                  <a-input v-model="newAlgorithm.class" placeholder="请输入" />
                 </a-form-item>
 
                 <a-form-item field="description" label="描述">
-                  <a-textarea v-model="detail.description" placeholder="请输入" allow-clear/>
+                  <a-textarea
+                    v-model="newAlgorithm.description"
+                    placeholder="请输入"
+                    allow-clear
+                  />
                 </a-form-item>
               </a-form>
               <div style="text-align: center; margin-top: 30px">
@@ -198,9 +209,20 @@ const route = useRoute();
 const detail = JSON.parse(route.query.item as any);
 console.log(detail);
 
+const newAlgorithm = reactive({
+  algorithmname: detail.algorithmname,
+  department: detail.department,
+  status: detail.status,
+  tags: detail.tags,
+  scene: detail.scene,
+  class: detail.class,
+  description: detail.description,
+  informatiom: detail.informatiom,
+});
+
 const goback = () => {
-  router.go(-1)
-}
+  router.go(-1);
+};
 
 const tab = ref(1);
 const TabChange = () => {
@@ -210,13 +232,17 @@ const allscene = reactive([{ name: '区域超员智能视频监控' }]);
 
 const gotoScenedetail = (id: string) => {
   console.log(id);
+  const obj = JSON.stringify(detail.scene);
+  router.push({
+    path: `/aispace/sceneDetail/${id}`,
+    query: { item: obj },
+  });
 };
 
 const AlgorithmChange = (alid: string) => {
   console.log(alid);
+  console.log(newAlgorithm);
 };
-
-
 </script>
 
 <style lang="less" scoped>
@@ -230,12 +256,6 @@ const AlgorithmChange = (alid: string) => {
   }
 }
 
-.mainbox {
-  background-image: url('@/assets/images/backAl.jpg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: 100% 100%;
-}
 .algorithmDetail-imgbox:before {
   background: linear-gradient(
     180deg,
