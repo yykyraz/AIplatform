@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 12:41:07
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 19:49:39
+ * @LastEditTime: 2023-04-03 17:03:29
  * @FilePath: \项目\AIplatform\ai-platform\src\views\data\classic\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -81,7 +81,10 @@
                 </a-form-item>
 
                 <a-form-item field="algorithm" label="所属场景">
-                  <a-select v-model="newDataSet.scene" placeholder="请选择">
+                  <a-select
+                    v-model="newDataSet.scene.name"
+                    placeholder="请选择"
+                  >
                     <a-option v-for="(item, index) in allscene" :key="index">{{
                       item.name
                     }}</a-option>
@@ -228,12 +231,11 @@ const data = reactive([
     department: '流程与信息化部',
     description: '该数据集通过固定在学校大门上的两个摄像头获得',
     scene: {
-      sid: '1',
       name: 'OCR文字识别',
     },
     status: '未上传',
     tags: ['其他'],
-    introduction: '一个测试'
+    introduction: '一个测试',
   },
 ]);
 
@@ -243,7 +245,6 @@ const newDataSet = reactive({
   status: '',
   tags: [],
   scene: {
-    sid: '',
     name: '',
   },
   class: '',
@@ -258,7 +259,6 @@ const allscene = reactive([{ name: '区域超员智能视频监控' }]);
 const clearForm = () => {
   newDataSet.department = '';
   newDataSet.class = '';
-  newDataSet.scene.sid = '';
   newDataSet.scene.name = '';
   newDataSet.description = '';
   newDataSet.dataname = '';

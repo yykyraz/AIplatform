@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 12:24:48
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-03 11:44:16
+ * @LastEditTime: 2023-04-03 16:01:53
  * @FilePath: \项目\AIplatform\ai-platform\src\views\aispace\ocrWord\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -33,8 +33,10 @@
             <img src="@/assets/images/ocr/test1.jpg" style="width: 100%" />
           </a-spin>
         </div>
-        <div style="float: right; width: 30%;margin-right: 40px;">
-          <span style="margin-bottom: 10px;"><b style="font-size: 20px;">识别结果</b></span>
+        <div style="float: right; width: 30%; margin-right: 40px">
+          <span style="margin-bottom: 10px"
+            ><b style="font-size: 20px">识别结果</b></span
+          >
           <a-textarea
             v-model="response.text"
             style="height: 300px"
@@ -78,28 +80,25 @@ const beforeRemove = (file: any) => {
   });
 };
 
-const beforeUpload = (file: any) => {
-  return new Promise<boolean>((resolve, reject) => {
+const beforeUpload = async (file: File) => {
+  const res = await new Promise<File>((resolve, reject) => {
     Modal.confirm({
       title: 'beforeUpload',
       content: `确认上传 ${file.name}`,
-      onOk: () => resolve(true),
+      onOk: () => resolve(file),
       onCancel: () => reject(new Error('cancel')),
     });
   });
-};
-
-const handleRemove = (file: any) => {
-  const index = fileList.value.indexOf(file as never);
-  const newFileList = fileList.value.slice();
-  newFileList.splice(index, 1);
-  fileList.value = newFileList;
+  console.log(res);
+  return new Promise<boolean>((resolve,reject) => {
+    resolve(true)
+  })
 };
 
 const copyText = () => {
   const input = document.createElement('input');
   document.body.appendChild(input);
-  input.setAttribute('value', outputData.value);
+  input.setAttribute('value', response.text);
   input.select();
   if (document.execCommand('copy')) {
     document.execCommand('copy');

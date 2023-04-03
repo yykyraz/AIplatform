@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 11:13:54
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-03-29 20:47:57
+ * @LastEditTime: 2023-04-03 15:21:19
  * @FilePath: \项目\AIplatform\ai-platform\src\views\home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -52,7 +52,9 @@
               <template #title>{{ tab.name }}</template>
               <p>{{ tab.des }}</p
               ><br />
-              <a-button type="primary">进入{{ tab.name }}</a-button>
+              <a-button type="primary" @click="goPage(tab.path)"
+                >进入{{ tab.name }}</a-button
+              >
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -89,6 +91,9 @@
 </template>
 
 <script lang="ts" setup>
+import { useRoute, useRouter } from 'vue-router';
+
+const router = useRouter();
 const images = [
   {
     img: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
@@ -105,10 +110,16 @@ const images = [
 ];
 
 const tabs = [
-  { name: 'OCR文字识别', des: '这是OCR文字识别' },
-  { name: 'OCR转Excel', des: '这是转文字功能' },
-  { name: '数据集展示', des: '这是数据集展示' },
+  { name: 'OCR文字识别', des: '这是OCR文字识别', path: '/aispace/ocrword' },
+  { name: 'OCR转Excel', des: '这是转文字功能', path: '/aispace/ocrexcel' },
+  { name: '数据集展示', des: '这是数据集展示', path: '/data/classic' },
 ];
+
+const goPage = (path: string) => {
+  router.push({
+    path
+  });
+};
 </script>
 
 <script lang="ts">

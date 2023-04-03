@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 14:15:06
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 20:17:05
+ * @LastEditTime: 2023-04-03 16:48:09
  * @FilePath: \项目\AIplatform\ai-platform\src\views\algorithm\aldetail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -43,6 +43,7 @@
                   <a-descriptions-item label="所属场景">
                     <a
                       style="color: #1890ff; font-size: 16px; font-weight: bold"
+                      @click="gotoScenedetail(detail.scene.sid)"
                       >{{ detail.scene.name }}</a
                     >
                   </a-descriptions-item>
@@ -280,7 +281,10 @@
                       validate-trigger="input"
                       required
                     >
-                      <a-select v-model="newDataSet.status" placeholder="请选择">
+                      <a-select
+                        v-model="newDataSet.status"
+                        placeholder="请选择"
+                      >
                         <a-option>未上传</a-option>
                         <a-option>标记中</a-option>
                         <a-option>已完成</a-option>
@@ -315,10 +319,15 @@
                       validate-trigger="input"
                       required
                     >
-                      <a-select v-model="newDataSet.scene" placeholder="请选择">
-                        <a-option>OCR识别</a-option>
-                        <a-option>优秀项目</a-option>
-                        <a-option>场景测试</a-option>
+                      <a-select
+                        v-model="newDataSet.scene.name"
+                        placeholder="请选择"
+                      >
+                        <a-option
+                          v-for="(item, index) in allscene"
+                          :key="index"
+                          >{{ item.name }}</a-option
+                        >
                       </a-select>
                     </a-form-item>
                     <a-form-item
@@ -359,6 +368,45 @@ const route = useRoute();
 const detail = JSON.parse(route.query.item as any);
 console.log(detail);
 
+const allscene = reactive([
+  {
+    sid: '1',
+    department: '信息化部',
+    description: 'OCR文字识别',
+    name: 'OCR文字识别',
+    status: '标记中',
+    tags: ['质量', '试飞'],
+    techtag: ['计算机视觉'],
+  },
+  {
+    sid: '2',
+    department: '安全部',
+    description: 'OCR表格识别',
+    name: 'OCR表格识别',
+    status: '已完成',
+    tags: ['质量', '试飞'],
+    techtag: ['计算机视觉'],
+  },
+  {
+    sid: '3',
+    department: '安全部',
+    description: '仪表识别',
+    name: '仪表识别',
+    status: '未上传',
+    tags: ['质量', '安全', '试飞'],
+    techtag: ['计算机视觉'],
+  },
+  {
+    sid: '4',
+    department: '安全部',
+    description: '区域超员智能视频监控',
+    name: '区域超员智能视频监控',
+    status: '未上传',
+    tags: ['质量', '安全', '试飞'],
+    techtag: ['计算机视觉'],
+  },
+]);
+
 const newDataSet = reactive({
   dataname: detail.dataname,
   department: detail.department,
@@ -368,7 +416,9 @@ const newDataSet = reactive({
   class: detail.class,
   description: detail.description,
   introduction: detail.introduction,
-})
+});
+console.log(newDataSet);
+
 
 const file = ref();
 const tab = ref(1);
@@ -396,11 +446,24 @@ const onProgress = (currentFile: any) => {
 
 const handleInfoChange = (id: string) => {
   console.log(id);
+  console.log(newDataSet);
+  
 };
 
 const handleChange = (f: any) => {
   console.log(f);
 };
+
+
+const gotoScenedetail = (id: string) => {
+  console.log(id);
+  const obj = JSON.stringify(detail.scene);
+  router.push({
+    path: `/aispace/sceneDetail/${id}`,
+    query: { item: obj },
+  });
+};
+
 </script>
   
   <style lang="less" scoped>
