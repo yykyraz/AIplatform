@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-02-04 09:36:11
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-01 12:51:34
+ * @LastEditTime: 2023-04-23 09:29:34
  * @FilePath: \项目\AIplatform\ai-platform\src\locale\zh-CN.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -28,7 +28,9 @@ import localeClassicData from '@/views/data/classic/locale/zh-CN';
 
 import localeTalentGroup from '@/views/talent/group/locale/zh-CN';
 
-import localAlgorithm from '@/views/algorithm/locale/zh-CN';
+import localeAlgorithm from '@/views/algorithm/locale/zh-CN';
+
+import localeAICompetition from '@/views/competition/locale/zh-CN';
 
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 
@@ -63,6 +65,7 @@ export default {
   'menu.data': '数据集',
   'menu.talent': '人才库',
   'menu.algorithm': '算法',
+  'menu.competition': 'AI大赛',
   'menu.dashboard': '仪表盘',
   'menu.server.dashboard': '仪表盘-服务端',
   'menu.server.workplace': '工作台-服务端',
@@ -87,7 +90,8 @@ export default {
   ...localeProData,
   ...localeClassicData,
   ...localeTalentGroup,
-  ...localAlgorithm,
+  ...localeAlgorithm,
+  ...localeAICompetition,
   ...localeWorkplace,
 
   ...localeMonitor,
