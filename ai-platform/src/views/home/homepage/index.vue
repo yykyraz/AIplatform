@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 11:13:54
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-03 15:21:19
+ * @LastEditTime: 2023-04-04 12:34:19
  * @FilePath: \项目\AIplatform\ai-platform\src\views\home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -31,6 +31,7 @@
               :src="image.img"
               :style="{
                 width: '100%',
+                height: '100%'
               }"
             />
           </a>
@@ -96,7 +97,7 @@ import { useRoute, useRouter } from 'vue-router';
 const router = useRouter();
 const images = [
   {
-    img: 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp',
+    img: 'http://127.0.0.1:5173/src/assets/images/home/fenwoxin.jpg',
     link: '/exception/404',
   },
   {
