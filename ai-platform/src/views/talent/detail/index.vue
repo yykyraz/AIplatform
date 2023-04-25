@@ -1,13 +1,137 @@
 <template>
   <div class="container">
     <div>
-      <a-page-header
-        title="人才详情"
-        @back="goback"
-      >
+      <a-page-header title="人才详情" @back="goback">
         <template #subtitle>
           <a-space>
-            <span>{{ detail.name }}</span>
+            <span>{{ detail.value.name }}</span>
+            <span style="margin-left: 30px">
+              <a-button type="primary" size="large" @click="handleClick"
+                >修改信息</a-button
+              >
+              <a-drawer :width="500" :visible="visible" unmountOnClose>
+                <template #title>
+                  <span> 信息填写表 </span>
+                  <a-button
+                    type="primary"
+                    style="margin-left: 20px"
+                    @click="clearForm"
+                    >清空</a-button
+                  >
+                </template>
+                <template #footer>
+                  <a-button @click="handleCancel">取消</a-button>
+                </template>
+                <div>
+                  <a-form :model="newDetail.value" @submit-success="handleOk">
+                    <a-form-item field="name" label="姓名" required>
+                      <a-input
+                        v-model="newDetail.value.name"
+                        placeholder="请输入"
+                      />
+                    </a-form-item>
+                    <a-form-item field="gender" label="性别" required>
+                      <a-select
+                        v-model="newDetail.value.gender"
+                        placeholder="请选择"
+                      >
+                        <a-option value="男">男</a-option>
+                        <a-option value="女">女</a-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item field="jobNum" label="工号" required>
+                      <a-input
+                        v-model="newDetail.value.jobNum"
+                        placeholder="请输入"
+                      />
+                    </a-form-item>
+                    <a-form-item field="department" label="所属部门" required>
+                      <a-select
+                        v-model="newDetail.value.department"
+                        placeholder="请选择"
+                      >
+                        <a-option value="信息化部">信息化部</a-option>
+                        <a-option value="人力资源部">人力资源部</a-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item field="office" label="所属科室" required>
+                      <a-select
+                        v-model="newDetail.value.office"
+                        placeholder="请选择"
+                      >
+                        <a-option value="生产科">生产科</a-option>
+                        <a-option value="技术科">技术科</a-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item field="team" label="所属团队" required>
+                      <a-select
+                        v-model="newDetail.value.team"
+                        placeholder="请选择"
+                      >
+                        <a-option value="团队一">团队一</a-option>
+                        <a-option value="团队二">团队二</a-option>
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item field="position" label="岗位" required>
+                      <a-select
+                        v-model="newDetail.value.position"
+                        placeholder="请选择"
+                      >
+                        <a-option value="软件工程技术师"
+                          >软件工程技术师</a-option
+                        >
+                      </a-select>
+                    </a-form-item>
+                    <a-form-item field="reserchField" label="研究方向" required>
+                      <a-textarea
+                        v-model="newDetail.value.reserchField"
+                        placeholder="请输入"
+                        allow-clear
+                      />
+                    </a-form-item>
+                    <a-form-item field="honor" label="荣誉/成果" required>
+                      <a-textarea
+                        v-model="newDetail.value.honor"
+                        placeholder="请输入"
+                        allow-clear
+                      />
+                    </a-form-item>
+                    <a-form-item field="contactInfo" label="联系方式" required>
+                      <a-input
+                        v-model="newDetail.value.contactInfo"
+                        placeholder="请输入"
+                      />
+                    </a-form-item>
+                    <a-form-item field="certification" label="证明材料">
+                      <a-space direction="vertical" :style="{ width: '100%' }">
+                        <a-upload action="/" @before-upload="beforeUpload" />
+                      </a-space>
+                    </a-form-item>
+                    <a-form-item>
+                      <a-button
+                        style="margin-left: 110px; margin-top: 20px"
+                        html-type="submit"
+                        type="primary"
+                      >
+                        提交
+                      </a-button>
+                    </a-form-item>
+                  </a-form>
+                </div>
+              </a-drawer>
+              <a-popconfirm content="确认退出人才库？" @ok="del">
+                <a-button
+                  style="margin-left: 10px"
+                  size="large"
+                  status="danger"
+                >
+                  退出人才库
+                  <template #icon>
+                    <icon-delete />
+                  </template>
+                </a-button>
+              </a-popconfirm>
+            </span>
           </a-space>
         </template>
       </a-page-header>
@@ -23,7 +147,7 @@
               alt="dessert"
               :src="
                 'http://127.0.0.1:5173/src/assets/images/talent/' +
-                detail.name +
+                detail.value.name +
                 '.jpg'
               "
             />
@@ -36,7 +160,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.name }}
+                  {{ detail.value.name }}
                 </a-card>
               </a-col>
               <a-col :span="12">
@@ -45,7 +169,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.jobNum }}
+                  {{ detail.value.jobNum }}
                 </a-card>
               </a-col>
             </a-row>
@@ -66,7 +190,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.department }}
+                  {{ detail.value.department }}
                 </a-card>
               </a-col>
               <a-col :span="8">
@@ -75,7 +199,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.office }}
+                  {{ detail.value.office }}
                 </a-card>
               </a-col>
               <a-col :span="8">
@@ -84,7 +208,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.team }}
+                  {{ detail.value.team }}
                 </a-card>
               </a-col>
             </a-row>
@@ -95,7 +219,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.position }}
+                  {{ detail.value.position }}
                 </a-card>
               </a-col>
               <a-col :span="12">
@@ -104,7 +228,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.contactInfo }}
+                  {{ detail.value.contactInfo }}
                 </a-card>
               </a-col>
             </a-row>
@@ -115,7 +239,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.reserchField }}
+                  {{ detail.value.reserchField }}
                 </a-card>
               </a-col>
             </a-row>
@@ -126,7 +250,7 @@
                   :style="{ width: '100%' }"
                   :header-style="{ backgroundColor: '#F2F3F5' }"
                 >
-                  {{ detail.honor }}
+                  {{ detail.value.honor }}
                 </a-card>
               </a-col>
             </a-row>
@@ -140,15 +264,129 @@
 
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router';
+import { delTalent, updateTalent, getTalentDetail } from '@/api/talent';
+import { onMounted, reactive, ref } from 'vue';
+import { Message, Modal } from '@arco-design/web-vue';
 
 const router = useRouter();
 const route = useRoute();
-const detail = JSON.parse(route.query.item as any);
-console.log(detail);
+
+const detail = reactive({
+  value: {
+    name: '',
+    gender: '',
+    jobNum: '',
+    department: '',
+    office: '',
+    team: '',
+    position: '',
+    contactInfo: '',
+    honor: '',
+    reserchField: '',
+  },
+});
+
+const newDetail = reactive({
+  value: {
+    name: '',
+    gender: '',
+    jobNum: '',
+    department: '',
+    office: '',
+    team: '',
+    position: '',
+    contactInfo: '',
+    honor: '',
+    reserchField: '',
+  },
+});
+
+const visible = ref(false);
+
+const showDetail = () => {
+  getTalentDetail({ _id: route.query.id })
+    .then((res) => {
+      detail.value = JSON.parse(JSON.stringify(res.data));
+      newDetail.value = { ...detail.value };
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+onMounted(() => {
+  showDetail();
+});
+
+const handleClick = () => {
+  visible.value = true;
+};
+
+const clearForm = () => {
+  newDetail.value = {
+    ...{
+      name: '',
+      gender: '',
+      jobNum: '',
+      department: '',
+      office: '',
+      team: '',
+      position: '',
+      contactInfo: '',
+      honor: '',
+      reserchField: '',
+    },
+  };
+};
+
+const handleOk = () => {
+  updateTalent({
+    _id: route.query.id,
+    ...newDetail.value,
+  })
+    .then((res) => {
+      detail.value = JSON.parse(JSON.stringify(res.data));
+      Message.success('修改成功');
+      visible.value = false;
+    })
+    .catch((err) => {
+      Message.error(err);
+      console.log(err);
+    });
+};
+
+const handleCancel = () => {
+  visible.value = false;
+};
+
+const del = () => {
+  /* eslint no-underscore-dangle: 0 */
+  delTalent({ _id: route.query.id })
+    .then((res) => {
+      console.log(res.data);
+      Message.success('成功退出');
+      router.go(-1);
+    })
+    .catch((err) => {
+      Message.error(err);
+      console.log(err);
+    });
+};
+
+const beforeUpload = (file: { name: any }) => {
+  return new Promise<boolean>((resolve, reject) => {
+    Modal.confirm({
+      title: '上传确认',
+      content: `确认上传 ${file.name}`,
+      onOk: () => resolve(true),
+      onCancel: () => reject(new Error('cancel')),
+    });
+  });
+};
 
 const goback = () => {
   router.go(-1);
-}
+};
 </script>
 
 <style scoped lang="less">

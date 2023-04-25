@@ -25,3 +25,25 @@ export function getUserInfo() {
 export function getMenuList() {
   return axios.post<RouteRecordNormalized[]>('/api/user/menu');
 }
+
+
+// 查找用户
+export function find(data: any) {
+  // return axios.post<any>('http://127.0.0.1:7001/find', data);
+  return axios.post<any>('http://127.0.0.1:7001/userFind', data);
+}
+
+// 添加用户
+export function create(data: any) {
+  return axios.post<any>('http://127.0.0.1:7001/userCreate', data);
+}
+
+// 删除用户
+export function del(data: any) {
+  return axios.post<any>('http://127.0.0.1:7001/userDelete', data);
+}
+
+// 更新用户信息
+export function update(data: any) {
+  return axios.post<any>('http://127.0.0.1:7001/userUpdate', data);
+}

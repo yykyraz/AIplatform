@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-28 15:30:32
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-02 14:56:51
+ * @LastEditTime: 2023-04-24 17:16:27
  * @FilePath: \项目\AIplatform\ai-platform\src\views\talent\group\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -25,8 +25,6 @@
           <a-drawer
             :width="500"
             :visible="visible"
-            @ok="handleOk"
-            @cancel="handleCancel"
             unmountOnClose
           >
             <template #title>
@@ -38,21 +36,40 @@
                 >清空</a-button
               >
             </template>
+            <template #footer>
+              <a-button @click="handleCancel">取消</a-button>
+            </template>
             <div>
-              <a-form :model="talentInfo">
-                <a-form-item field="name" label="姓名" required>
+              <a-form :model="talentInfo" @submit-success="handleOk">
+                <a-form-item
+                  field="name"
+                  label="姓名"
+                  :rules="[{ required: true, message: '请输入姓名' }]"
+                >
                   <a-input v-model="talentInfo.name" placeholder="请输入" />
                 </a-form-item>
-                <a-form-item field="gender" label="性别" required>
+                <a-form-item
+                  field="gender"
+                  label="性别"
+                  :rules="[{ required: true, message: '请选择性别' }]"
+                >
                   <a-select v-model="talentInfo.gender" placeholder="请选择">
                     <a-option value="男">男</a-option>
                     <a-option value="女">女</a-option>
                   </a-select>
                 </a-form-item>
-                <a-form-item field="jobNum" label="工号" required>
+                <a-form-item
+                  field="jobNum"
+                  label="工号"
+                  :rules="[{ required: true, message: '请填写工号' }]"
+                >
                   <a-input v-model="talentInfo.jobNum" placeholder="请输入" />
                 </a-form-item>
-                <a-form-item field="department" label="所属部门" required>
+                <a-form-item
+                  field="department"
+                  label="所属部门"
+                  :rules="[{ required: true, message: '请填写您所属的部门' }]"
+                >
                   <a-select
                     v-model="talentInfo.department"
                     placeholder="请选择"
@@ -61,44 +78,71 @@
                     <a-option value="人力资源部">人力资源部</a-option>
                   </a-select>
                 </a-form-item>
-                <a-form-item field="office" label="所属科室" required>
+                <a-form-item
+                  field="office"
+                  label="所属科室"
+                  :rules="[{ required: true, message: '请填写您所属的科室' }]"
+                >
                   <a-select v-model="talentInfo.office" placeholder="请选择">
                     <a-option value="生产科">生产科</a-option>
                     <a-option value="技术科">技术科</a-option>
                   </a-select>
                 </a-form-item>
-                <a-form-item field="team" label="所属团队" required>
+                <a-form-item
+                  field="team"
+                  label="所属团队"
+                  :rules="[{ required: true, message: '请填写您所属的团队' }]"
+                >
                   <a-select v-model="talentInfo.team" placeholder="请选择">
                     <a-option value="团队一">团队一</a-option>
                     <a-option value="团队二">团队二</a-option>
                   </a-select>
                 </a-form-item>
-                <a-form-item field="position" label="岗位" required>
+                <a-form-item
+                  field="position"
+                  label="岗位"
+                  :rules="[{ required: true, message: '请填写您的岗位' }]"
+                >
                   <a-select v-model="talentInfo.position" placeholder="请选择">
                     <a-option value="软件工程技术师">软件工程技术师</a-option>
                   </a-select>
                 </a-form-item>
-                <a-form-item field="reserchField" label="研究方向" required>
+                <a-form-item
+                  field="reserchField"
+                  label="研究方向"
+                  :rules="[{ required: true, message: '请描述您的研究方向' }]"
+                >
                   <a-textarea
                     v-model="talentInfo.reserchField"
                     placeholder="请输入"
                     allow-clear
                   />
                 </a-form-item>
-                <a-form-item field="honor" label="荣誉/成果" required>
+                <a-form-item field="honor" label="荣誉/成果">
                   <a-textarea
                     v-model="talentInfo.honor"
                     placeholder="请输入"
                     allow-clear
                   />
                 </a-form-item>
-                <a-form-item field="contactInfo" label="联系方式" required>
-                  <a-input v-model="talentInfo.name" placeholder="请输入" />
+                <a-form-item field="contactInfo" label="联系方式">
+                  <a-input
+                    v-model="talentInfo.contactInfo"
+                    placeholder="请输入"
+                  />
                 </a-form-item>
                 <a-form-item field="certification" label="证明材料">
                   <a-space direction="vertical" :style="{ width: '100%' }">
                     <a-upload action="/" @before-upload="beforeUpload" />
                   </a-space>
+                </a-form-item>
+                <a-form-item>
+                  <a-button
+                    style="margin-left: 110px; margin-top: 20px"
+                    html-type="submit"
+                    type="primary"
+                    >提交</a-button
+                  >
                 </a-form-item>
               </a-form>
             </div>
@@ -112,9 +156,9 @@
               v-model="search"
               placeholder="搜索人才"
               size="large"
-              allow-clear="true"
+              allow-clear
               search-button
-              @input="searchall"
+              @input="searchAll"
             >
             </a-input-search>
           </a-space>
@@ -130,7 +174,7 @@
                 <a-card
                   hoverable
                   style="cursor: pointer"
-                  @click="gotoDetail(item.aid)"
+                  @click="gotoDetail(item._id)"
                 >
                   <template #cover>
                     <div
@@ -170,44 +214,19 @@
 </template>
   
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { Modal } from '@arco-design/web-vue';
+import { showAllTalent, createTalent, findTalent } from '@/api/talent';
 
 const router = useRouter();
+const talentData = ref();
 
-const talentData = reactive([
-  {
-    aid: '1',
-    name: '杨凌云',
-    gender: '男',
-    jobNum: '337845818',
-    department: '信息化部',
-    team: '团队一',
-    office: '生产科',
-    position: '软件工程技术师',
-    contactInfo: '337845818@qq.com',
-    reserchField:
-      '基于域自适应的知识迁移和交叉学习技术。\n针对某型歼击机和教练机生产线，应用迁移学习和知识迁移技术，提出航空航天制造过程多场景下的模型训练方法；针对特定场景下数据样本量少、质量低等问题建立高效数据迁移补偿方法；针对深度学习模型参数体量大、训练成本高等问题研究模型迁移方法，提高训练效率和精度。基于研究成果构建面向航空制造的人工智能场景库，将所研成果进行封装和抽象，形成可推广、易迁移的人工智能场景库。 ',
-    honor: 'AI大赛一等奖',
-  },
-  {
-    aid: '2',
-    name: '杨凌云',
-    gender: '女',
-    jobNum: '88888888',
-    department: '人力资源部',
-    team: '团队二',
-    office: '生产科',
-    position: '软件工程技术师',
-    contactInfo: '666666666@qq.com',
-    reserchField:
-      '基于可解释性机器学习的模型推理和决策分析。人工智能模型的“黑箱”特点导致推理决策过程缺乏与用户之间的交互与信任。基于可解释性机器学习理论，研究数据、模型、结果的可解释性，提出推理决策的全流程可解释方法，提高推理过程的透明性，增强决策结果的可信度。基于研究成果构建面向航空制造的人工智能算法库，将所研成果使用非结构化数据库进行智能归集与算法可视化，最终形成人工智能算法库。 ',
-    honor: 'AI大赛一等奖',
-  },
-]);
+onMounted(() => {
+  show();
+});
+
 const talentInfo = reactive({
-  aid: '',
   name: '',
   gender: '',
   jobNum: '',
@@ -236,29 +255,61 @@ const clearForm = () => {
   talentInfo.reserchField = '';
 };
 
+const show = () => {
+  showAllTalent()
+    .then((res) => {
+      talentData.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 const handleClick = () => {
   visible.value = true;
 };
 
 const handleOk = () => {
+  createTalent(talentInfo)
+    .then((res) => {
+      console.log(res.data);
+      show();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   visible.value = false;
+  clearForm();
 };
 
 const handleCancel = () => {
   visible.value = false;
 };
 
-const searchall = () => {};
+const searchAll = () => {
+  if (search.value !== '') {
+    findTalent({ name: search.value })
+      .then((res) => {
+        talentData.value = JSON.parse(JSON.stringify(res.data));
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
+  } else {
+    showAllTalent()
+      .then((res) => {
+        talentData.value = JSON.parse(JSON.stringify(res.data));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+};
 
-const gotoDetail = (aid: string) => {
-  const item = talentData.find((item) => {
-    return item.aid === aid;
-  });
-  console.log(item);
-  const obj = JSON.stringify(item);
+const gotoDetail = (_id: string) => {
   router.push({
-    path: `/talent/detail/${aid}`,
-    query: { item: obj },
+    path: `/talent/detail/${_id}`,
+    query: { id: _id },
   });
 };
 
