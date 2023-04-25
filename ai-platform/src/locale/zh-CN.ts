@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-02-04 09:36:11
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-23 09:29:34
+ * @LastEditTime: 2023-04-25 19:30:23
  * @FilePath: \项目\AIplatform\ai-platform\src\locale\zh-CN.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,8 +23,7 @@ import localeScene from '@/views/aispace/scene/locale/zh-CN';
 import localeOcrWord from '@/views/aispace/ocrWord/locale/zh-CN';
 import localeOcrExcel from '@/views/aispace/ocrExcel/locale/zh-CN';
 
-import localeProData from '@/views/data/pro/locale/zh-CN';
-import localeClassicData from '@/views/data/classic/locale/zh-CN';
+import localeDataSet from '@/views/data/locale/zh-CN';
 
 import localeTalentGroup from '@/views/talent/group/locale/zh-CN';
 
@@ -87,8 +86,7 @@ export default {
   ...localeScene,
   ...localeOcrWord,
   ...localeOcrExcel,
-  ...localeProData,
-  ...localeClassicData,
+  ...localeDataSet,
   ...localeTalentGroup,
   ...localeAlgorithm,
   ...localeAICompetition,

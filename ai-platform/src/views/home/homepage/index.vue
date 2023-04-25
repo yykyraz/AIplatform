@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 11:13:54
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-04 12:34:19
+ * @LastEditTime: 2023-04-25 20:40:19
  * @FilePath: \项目\AIplatform\ai-platform\src\views\home\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -83,7 +83,7 @@
         <div style="text-align: center">
           <p>这里是AI大赛</p>
           <div style="position: relative; top: 62px">
-            <p><a-button type="primary">进入AI大赛</a-button> </p>
+            <p><a-button type="primary" @click="goAI">进入AI大赛</a-button> </p>
           </div>
         </div>
       </a-card>
@@ -113,7 +113,7 @@ const images = [
 const tabs = [
   { name: 'OCR文字识别', des: '这是OCR文字识别', path: '/aispace/ocrword' },
   { name: 'OCR转Excel', des: '这是转文字功能', path: '/aispace/ocrexcel' },
-  { name: '数据集展示', des: '这是数据集展示', path: '/data/classic' },
+  { name: '数据集展示', des: '这是数据集展示', path: '/data/dataset' },
 ];
 
 const goPage = (path: string) => {
@@ -121,6 +121,10 @@ const goPage = (path: string) => {
     path
   });
 };
+
+const goAI = () => {
+  router.push({path: '/competition/aiCompetion'})
+}
 </script>
 
 <script lang="ts">

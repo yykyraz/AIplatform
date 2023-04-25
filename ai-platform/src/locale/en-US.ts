@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-02-04 09:36:11
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-23 09:29:57
+ * @LastEditTime: 2023-04-25 19:32:45
  * @FilePath: \项目\AIplatform\ai-platform\src\locale\en-US.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,6 +14,8 @@ import localeHome from '@/views/home/locale/en-US';
 import localeScene from '@/views/aispace/scene/locale/en-US';
 import localeOcrWord from '@/views/aispace/ocrWord/locale/en-US';
 import localeOcrExcel from '@/views/aispace/ocrExcel/locale/en-US';
+
+import localeDataSet from '@/views/data/locale/en-US';
 
 import localeTalentGroup from '@/views/talent/group/locale/en-US'
 
@@ -53,6 +55,8 @@ export default {
   'menu.aispace': 'AISpace',
   'menu.talent': 'Talent',
   'menu.competition': 'AI Competition',
+  'menu.algorithm': 'Algorithm',
+  'menu.data': 'Data Set',
   'menu.dashboard': 'Dashboard',
   'menu.server.dashboard': 'Dashboard-Server',
   'menu.server.workplace': 'Workplace-Server',
@@ -75,6 +79,7 @@ export default {
   ...localeScene,
   ...localeOcrWord,
   ...localeOcrExcel,
+  ...localeDataSet,
   ...localeTalentGroup,
   ...localeAlgorithm,
   ...localeAICompetition,

@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-04-01 14:15:06
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-03 16:48:09
+ * @LastEditTime: 2023-04-25 20:33:41
  * @FilePath: \项目\AIplatform\ai-platform\src\views\algorithm\aldetail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,7 +12,7 @@
       <a-page-header title="数据集详情" @back="goback">
         <template #subtitle>
           <a-space>
-            <span>{{ detail.dataname }}</span>
+            <span>{{ detail.value.dataname }}</span>
           </a-space>
         </template>
       </a-page-header>
@@ -28,7 +28,7 @@
             <img
               :src="
                 'http://127.0.0.1:5173/src/assets/images/dataset/' +
-                detail.dataname +
+                detail.value.dataname +
                 '.jpg'
               "
               class="datasetdetail-img"
@@ -42,27 +42,36 @@
                 <a-descriptions size="large" layout="vertical" bordered>
                   <a-descriptions-item label="所属场景">
                     <a
-                      style="color: #1890ff; font-size: 16px; font-weight: bold"
-                      @click="gotoScenedetail(detail.scene.sid)"
-                      >{{ detail.scene.name }}</a
+                      style="
+                        color: #1890ff;
+                        font-size: 16px;
+                        font-weight: bold;
+                        cursor: pointer;
+                      "
+                      @click="gotoScenedetail(detail.value.scene.name)"
+                      >{{ detail.value.scene.name }}</a
                     >
                   </a-descriptions-item>
                   <a-descriptions-item label="所属部门">
-                    <span> {{ detail.department }} </span>
+                    <span> {{ detail.value.department }} </span>
                   </a-descriptions-item>
                   <a-descriptions-item label="数据集标签">
                     <a-tag
                       color="blue"
-                      v-for="tag in detail.tags"
+                      v-for="tag in detail.value.tags"
                       :key="tag"
                       style="margin-right: 5px"
                     >
-                      {{ tag.toUpperCase() }}
+                      {{ tag }}
                     </a-tag>
                   </a-descriptions-item>
                   <a-descriptions-item label="介绍">
                     <p style="margin-bottom: 0">
-                      {{ detail.introduction ? detail.introduction : '暂无' }}
+                      {{
+                        detail.value.introduction
+                          ? detail.value.introduction
+                          : '暂无'
+                      }}
                     </p>
                   </a-descriptions-item>
                 </a-descriptions>
@@ -75,32 +84,23 @@
                   class="data-description"
                 >
                   <a-descriptions-item label="状态" :span="3">
-                    <a-tag size="large" color="green">{{
-                      detail.status
-                    }}</a-tag>
-                  </a-descriptions-item>
-                  <a-descriptions-item label="数据">
-                    <span v-if="detail.data && detail.data.length > 0">
-                      <span
-                        v-for="file in detail.data"
-                        :key="file._id"
-                        style="display: flex"
-                      >
-                        <p class="download-version">{{ file.version }}版本 </p>
-                        <a
-                          class="downloadlink"
-                          :href="
-                            'http://10.1.1.135:7001/public' +
-                            '/aiplat/dataset/' +
-                            file.link
-                          "
-                        >
-                          下载
-                        </a>
-                      </span>
+                    <span v-if="detail.value.status === '未上传'">
+                      <a-tag size="large" color="red">
+                        {{ detail.value.status }}
+                      </a-tag>
                     </span>
-                    <p v-else>暂未上传数据集</p>
+                    <span v-else-if="detail.value.status === '标记中'">
+                      <a-tag size="large" color="orange">
+                        {{ detail.value.status }}
+                      </a-tag>
+                    </span>
+                    <span v-else>
+                      <a-tag size="large" color="green">
+                        {{ detail.value.status }}
+                      </a-tag>
+                    </span>
                   </a-descriptions-item>
+                  <a-descriptions-item label="数据"> </a-descriptions-item>
                 </a-descriptions>
               </a-col>
             </a-row>
@@ -165,14 +165,16 @@
                             </div>
                             <div
                               class="arco-upload-picture-card"
-                              style="background-color: var(--color-fill-2);
+                              style="
+                                background-color: var(--color-fill-2);
                                 color: var(--color-text-1);
                                 border: 1px dashed var(--color-fill-4);
                                 height: 100px;
                                 width: 185px;
                                 border-radius: 2;
                                 line-height: 158px;
-                                text-align: center;"
+                                text-align: center;
+                              "
                               v-else
                             >
                               <div class="arco-upload-picture-card-text">
@@ -229,28 +231,6 @@
                         </div>
                       </a-drawer>
                       <br />
-                      <span v-if="detail.data && detail.data.length > 0">
-                        <span
-                          v-for="file in detail.data"
-                          :key="file._id"
-                          style="display: flex"
-                        >
-                          <p class="download-version"
-                            >{{ file.version }}版本
-                          </p>
-                          <a
-                            class="downloadlink"
-                            :href="
-                              'http://10.1.1.135:7001/public' +
-                              '/aiplat/dataset/' +
-                              file.link
-                            "
-                          >
-                            下载
-                          </a>
-                        </span>
-                      </span>
-                      <p v-else>暂未上传数据集</p>
                     </a-col>
                   </a-row>
                 </a-col>
@@ -262,7 +242,7 @@
                       validate-trigger="input"
                       required
                     >
-                      <a-input v-model="newDataSet.dataname" />
+                      <a-input v-model="newDataSet.value.dataname" />
                     </a-form-item>
                     <a-form-item
                       field="department"
@@ -271,7 +251,7 @@
                       required
                     >
                       <a-input
-                        v-model="newDataSet.department"
+                        v-model="newDataSet.value.department"
                         placeholder="请输入"
                       />
                     </a-form-item>
@@ -282,7 +262,7 @@
                       required
                     >
                       <a-select
-                        v-model="newDataSet.status"
+                        v-model="newDataSet.value.status"
                         placeholder="请选择"
                       >
                         <a-option>未上传</a-option>
@@ -297,7 +277,7 @@
                       required
                     >
                       <a-select
-                        v-model="newDataSet.tags"
+                        v-model="newDataSet.value.tags"
                         placeholder="请选择"
                         multiple
                       >
@@ -320,7 +300,7 @@
                       required
                     >
                       <a-select
-                        v-model="newDataSet.scene.name"
+                        v-model="newDataSet.value.scene.name"
                         placeholder="请选择"
                       >
                         <a-option
@@ -336,19 +316,38 @@
                       validate-trigger="input"
                       required
                     >
-                      <a-textarea v-model="newDataSet.description" :rows="3" />
+                      <a-textarea
+                        v-model="newDataSet.value.description"
+                        :rows="3"
+                      />
                     </a-form-item>
                     <a-form-item field="introduction" label="介绍">
-                      <a-textarea v-model="newDataSet.introduction" :rows="3" />
+                      <a-textarea
+                        v-model="newDataSet.value.introduction"
+                        :rows="3"
+                      />
                     </a-form-item>
                   </a-form>
                   <a-button
                     type="primary"
+                    size="large"
                     style="float: right"
-                    @click="handleInfoChange(detail.dataid)"
+                    @click="handleInfoChange()"
                   >
                     确认修改
                   </a-button>
+                  <a-popconfirm content="确认删除该数据集？" @ok="del">
+                    <a-button
+                      style="float: right; margin-right: 10px"
+                      size="large"
+                      status="danger"
+                    >
+                      删除该数据集
+                      <template #icon>
+                        <icon-delete />
+                      </template>
+                    </a-button>
+                  </a-popconfirm>
                 </a-col>
               </a-row>
             </a-card>
@@ -360,65 +359,83 @@
 </template>
   
   <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { showAllScene } from '@/api/scene';
+import { delDataset, updateDataset, getDatasetDetail } from '@/api/dataset';
+import { Message } from '@arco-design/web-vue';
 
 const router = useRouter();
 const route = useRoute();
-const detail = JSON.parse(route.query.item as any);
-console.log(detail);
 
-const allscene = reactive([
-  {
-    sid: '1',
-    department: '信息化部',
-    description: 'OCR文字识别',
-    name: 'OCR文字识别',
-    status: '标记中',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
+const detail = reactive({
+  value: {
+    dataname: '',
+    department: '',
+    status: '',
+    tags: [],
+    scene: {
+      name: '',
+    },
+    class: '',
+    description: '',
+    introduction: '',
   },
-  {
-    sid: '2',
-    department: '安全部',
-    description: 'OCR表格识别',
-    name: 'OCR表格识别',
-    status: '已完成',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
+});
+
+const newDataSet = reactive({
+  value: {
+    dataname: '',
+    department: '',
+    status: '',
+    tags: [],
+    scene: {
+      name: '',
+    },
+    class: '',
+    description: '',
+    introduction: '',
   },
+});
+const allscene = ref([
   {
-    sid: '3',
-    department: '安全部',
-    description: '仪表识别',
-    name: '仪表识别',
-    status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '4',
-    department: '安全部',
-    description: '区域超员智能视频监控',
-    name: '区域超员智能视频监控',
-    status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
+    _id: '',
+    department: '',
+    description: '',
+    name: '',
+    status: '',
+    tags: [],
+    techtag: [],
+    relPerson: '',
   },
 ]);
 
-const newDataSet = reactive({
-  dataname: detail.dataname,
-  department: detail.department,
-  status: detail.status,
-  tags: detail.tags,
-  scene: detail.scene,
-  class: detail.class,
-  description: detail.description,
-  introduction: detail.introduction,
-});
-console.log(newDataSet);
+const showDetail = () => {
+  getDatasetDetail({ _id: route.query.id })
+    .then((res) => {
+      detail.value = JSON.parse(JSON.stringify(res.data));
+      console.log(detail.value);
+      newDataSet.value = { ...detail.value };
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
+const getAllScene = () => {
+  showAllScene()
+    .then((res) => {
+      allscene.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+onMounted(() => {
+  showDetail();
+  getAllScene();
+});
 
 const file = ref();
 const tab = ref(1);
@@ -444,26 +461,56 @@ const onProgress = (currentFile: any) => {
   file.value = currentFile;
 };
 
-const handleInfoChange = (id: string) => {
-  console.log(id);
-  console.log(newDataSet);
-  
+const handleInfoChange = () => {
+  updateDataset({
+    _id: route.query.id,
+    ...newDataSet.value,
+  })
+    .then((res) => {
+      console.log(res.data);
+
+      detail.value = newDataSet.value;
+      Message.success('修改成功');
+    })
+    .catch((err) => {
+      Message.success(err);
+      console.log(err);
+    });
 };
 
 const handleChange = (f: any) => {
   console.log(f);
 };
 
+const gotoScenedetail = (name: string) => {
+  /* eslint no-underscore-dangle: 0 */
+  const sceneId = ref('');
+  allscene.value.forEach((item) => {
+    if (item.name === name) {
+      sceneId.value = item._id;
+    }
+  });
+  console.log(sceneId.value);
 
-const gotoScenedetail = (id: string) => {
-  console.log(id);
-  const obj = JSON.stringify(detail.scene);
   router.push({
-    path: `/aispace/sceneDetail/${id}`,
-    query: { item: obj },
+    path: `/aispace/sceneDetail/${sceneId.value}`,
+    query: { id: sceneId.value },
   });
 };
 
+const del = () => {
+  /* eslint no-underscore-dangle: 0 */
+  delDataset({ _id: route.query.id })
+    .then((res) => {
+      Message.success('删除成功');
+      router.go(-1);
+      console.log(res.data);
+    })
+    .catch((err) => {
+      Message.error(err);
+      console.log(err);
+    });
+};
 </script>
   
   <style lang="less" scoped>
