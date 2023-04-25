@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 16:41:45
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-03 16:07:12
+ * @LastEditTime: 2023-04-25 15:41:50
  * @FilePath: \项目\AIplatform\ai-platform\src\views\aispace\scene\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -23,13 +23,7 @@
             <icon-plus />
             <span class="scene-plusword">发起场景</span>
           </a-button>
-          <a-drawer
-            :visible="visible"
-            @ok="handleOk"
-            @cancel="handleCancel"
-            unmountOnClose
-            width="600px"
-          >
+          <a-drawer :visible="visible" unmountOnClose width="600px">
             <template #title>
               <span style="margin-left: 40px">新建场景</span>
               <span style="margin-left: 30px"
@@ -38,17 +32,27 @@
                 ></span
               >
             </template>
+            <template #footer>
+              <a-button @click="handleCancel">取消</a-button>
+            </template>
             <div>
-              <a-form :model="newScene">
+              <a-form :model="newScene" @submit-success="handleOk">
                 <a-form-item field="name" label="场景名称" required>
                   <a-input v-model="newScene.name" placeholder="请输入" />
                 </a-form-item>
 
                 <a-form-item field="department" label="所属部门" required>
-                  <a-input v-model="newScene.department" placeholder="请输入" />
+                  <a-select v-model="newScene.department" placeholder="请选择">
+                    <a-option value="信息化部">信息化部</a-option>
+                    <a-option value="安全部">安全部</a-option>
+                  </a-select>
                 </a-form-item>
 
-                <a-form-item field="status" label="状态">
+                <a-form-item field="relPerson" label="负责人员工号">
+                  <a-input v-model="newScene.relPerson" placeholder="请输入" />
+                </a-form-item>
+
+                <a-form-item field="status" label="状态" required>
                   <a-select v-model="newScene.status" placeholder="请选择">
                     <a-option value="未上传">未上传</a-option>
                     <a-option value="标记中">标记中</a-option>
@@ -56,7 +60,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="techtag" label="所属技术" required>
+                <a-form-item field="techtag" label="所属技术">
                   <a-select
                     v-model="newScene.techtag"
                     placeholder="请选择"
@@ -72,7 +76,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="tags" label="标签" required>
+                <a-form-item field="tags" label="标签">
                   <a-select
                     v-model="newScene.tags"
                     placeholder="请选择"
@@ -91,7 +95,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="description" label="场景描述">
+                <a-form-item field="description" label="场景描述" required>
                   <a-textarea
                     v-model="newScene.description"
                     placeholder="请输入"
@@ -102,6 +106,15 @@
                   <a-space direction="vertical" :style="{ width: '100%' }">
                     <a-upload action="/" @before-upload="beforeUpload" />
                   </a-space>
+                </a-form-item>
+                <a-form-item>
+                  <a-button
+                    style="margin-left: 140px; margin-top: 20px"
+                    html-type="submit"
+                    type="primary"
+                  >
+                    提交
+                  </a-button>
                 </a-form-item>
               </a-form>
             </div>
@@ -115,11 +128,11 @@
           >
             <a-input-search
               v-model="search"
-              placeholder="搜索场景"
+              placeholder="搜索场景名称"
               size="large"
               allow-clear="true"
               search-button
-              @input="searchall"
+              @input="searchScene"
             >
             </a-input-search>
           </a-space>
@@ -128,8 +141,16 @@
       <div class="content">
         <div class="scene-show">
           <a-tabs v-model="tab" style="margin-top: 30px" @tab-click="TabChange">
-            <a-tab-pane key="1" title="全部场景" />
-            <a-tab-pane key="2" title="我的场景" />
+            <a-tab-pane
+              key="1"
+              title="全部场景"
+              :disabled="tab !== 1 && search !== '' ? true : false"
+            />
+            <a-tab-pane
+              key="2"
+              title="我的场景"
+              :disabled="tab === 1 && search !== '' ? true : false"
+            />
           </a-tabs>
           <a-list
             :grid-props="{ gutter: 1, span: 8 }"
@@ -142,7 +163,7 @@
                 <a-card
                   hoverable
                   class="scene-card"
-                  @click="gotoDetail(item.sid)"
+                  @click="gotoDetail(item._id)"
                 >
                   <template #actions>
                     <span class="icon-hover"> <IconThumbUp /> </span>
@@ -212,62 +233,20 @@
 </template>
     
   <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Modal } from '@arco-design/web-vue';
+import { Message, Modal } from '@arco-design/web-vue';
+import { showAllScene, createScene, findScene } from '@/api/scene';
 
 const router = useRouter();
 
-const data = reactive([
-  {
-    sid: '1',
-    department: '信息化部',
-    description: 'OCR文字识别',
-    name: 'OCR文字识别',
-    status: '标记中',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '2',
-    department: '安全部',
-    description: 'OCR表格识别',
-    name: 'OCR表格识别',
-    status: '已完成',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '3',
-    department: '安全部',
-    description: '仪表识别',
-    name: '仪表识别',
-    status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '4',
-    department: '安全部',
-    description: '区域超员智能视频监控',
-    name: '区域超员智能视频监控',
-    status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-]);
+onMounted(() => {
+  showAll();
+  showMyScene();
+});
 
-const mydata = reactive([
-  {
-    sid: '',
-    department: '信息化部',
-    description: 'OCR文字识别',
-    name: 'OCR文字识别',
-    status: '标记中',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-]);
+const data = ref([]);
+const mydata = ref([]);
 
 const newScene = reactive({
   department: '',
@@ -276,11 +255,32 @@ const newScene = reactive({
   status: '',
   tags: [],
   techtag: [],
+  relPerson: '',
 });
 
 const search = ref('');
 const visible = ref(false);
 const tab = ref(1);
+
+const showAll = () => {
+  showAllScene()
+    .then((res) => {
+      data.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const showMyScene = () => {
+  findScene({ relPerson: '337845818' })
+    .then((res) => {
+      mydata.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err: any) => {
+      console.log(err);
+    });
+};
 
 const clearForm = () => {
   newScene.department = '';
@@ -289,6 +289,7 @@ const clearForm = () => {
   newScene.status = '';
   newScene.tags = [];
   newScene.techtag = [];
+  newScene.relPerson = '';
 };
 
 const handleClick = () => {
@@ -296,28 +297,66 @@ const handleClick = () => {
 };
 
 const handleOk = () => {
-  visible.value = false;
+  if (
+    data.value.every((item: {name: ''}) => {
+      return item.name !== newScene.name;
+    })
+  ) {
+    createScene(newScene)
+      .then((res) => {
+        showAll();
+        showMyScene();
+        visible.value = false;
+        clearForm();
+      })
+      .catch((err) => {
+        Message.error(err);
+        console.log(err);
+      });
+  } else {
+    Message.error('存在同名场景，请修改场景名称！');
+  }
 };
 
 const handleCancel = () => {
   visible.value = false;
 };
 
-const searchall = () => {};
+const searchScene = () => {
+  if (search.value !== '') {
+    if (tab.value === 1) {
+      findScene({ name: search.value })
+        .then((res) => {
+          data.value = JSON.parse(JSON.stringify(res.data));
+        })
+        .catch((err: any) => {
+          Message.error(err);
+          console.log(err);
+        });
+    } else {
+      findScene({ name: search.value, relPerson: '337845818' })
+        .then((res) => {
+          mydata.value = JSON.parse(JSON.stringify(res.data));
+        })
+        .catch((err: any) => {
+          Message.error(err);
+          console.log(err);
+        });
+    }
+  } else {
+    showAll();
+    showMyScene();
+  }
+};
 
 const TabChange = () => {
   tab.value = -tab.value;
 };
 
-const gotoDetail = (sid: string) => {
-  const item = data.find((item) => {
-    return item.sid === sid;
-  });
-  console.log(item);
-  const obj = JSON.stringify(item);
+const gotoDetail = (_id: string) => {
   router.push({
-    path: `/aispace/sceneDetail/${sid}`,
-    query: { item: obj },
+    path: `/aispace/sceneDetail/${_id}`,
+    query: { id: _id },
   });
 };
 
@@ -333,7 +372,7 @@ const beforeUpload = (file: { name: any }) => {
 };
 </script>
     
-  <script lang="ts">
+<script lang="ts">
 export default {
   name: '403',
 };

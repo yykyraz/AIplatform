@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 16:41:45
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-03 16:12:18
+ * @LastEditTime: 2023-04-25 19:03:04
  * @FilePath: \项目\AIplatform\ai-platform\src\views\aispace\algorithm\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -27,13 +27,7 @@
             <icon-plus />
             <span class="algorithm-plusword">新建算法</span>
           </a-button>
-          <a-drawer
-            :visible="visible"
-            @ok="handleOk"
-            @cancel="handleCancel"
-            unmountOnClose
-            width="600px"
-          >
+          <a-drawer :visible="visible" unmountOnClose width="600px">
             <template #title>
               <span style="margin-left: 40px">新建算法</span>
               <span style="margin-left: 30px"
@@ -42,8 +36,11 @@
                 ></span
               >
             </template>
+            <template #footer>
+              <a-button @click="handleCancel">取消</a-button>
+            </template>
             <div>
-              <a-form :model="newAlgorithm">
+              <a-form :model="newAlgorithm" @submit-success="handleOk">
                 <a-form-item field="algorithmname" label="算法名字" required>
                   <a-input
                     v-model="newAlgorithm.algorithmname"
@@ -52,10 +49,13 @@
                 </a-form-item>
 
                 <a-form-item field="department" label="所属部门" required>
-                  <a-input
+                  <a-select
                     v-model="newAlgorithm.department"
-                    placeholder="请输入"
-                  />
+                    placeholder="请选择"
+                  >
+                    <a-option value="信息化部">信息化部</a-option>
+                    <a-option value="安全部">安全部</a-option>
+                  </a-select>
                 </a-form-item>
 
                 <a-form-item field="status" label="状态">
@@ -65,7 +65,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="tags" label="算法标签" required>
+                <a-form-item field="tags" label="算法标签">
                   <a-select
                     v-model="newAlgorithm.tags"
                     placeholder="请选择"
@@ -85,7 +85,10 @@
                 </a-form-item>
 
                 <a-form-item field="algorithm" label="所属场景">
-                  <a-select v-model="newAlgorithm.scene" placeholder="请选择">
+                  <a-select
+                    v-model="newAlgorithm.scene.name"
+                    placeholder="请选择"
+                  >
                     <a-option v-for="(item, index) in allscene" :key="index">{{
                       item.name
                     }}</a-option>
@@ -93,20 +96,40 @@
                 </a-form-item>
 
                 <a-form-item field="class" label="算法类型" required>
-                  <a-input v-model="newAlgorithm.class" placeholder="请输入" />
+                  <a-select v-model="newAlgorithm.class" placeholder="请选择">
+                    <a-option value="计算机视觉">计算机视觉</a-option>
+                  </a-select>
                 </a-form-item>
 
-                <a-form-item field="description" label="描述" required>
+                <a-form-item field="information" label="简介" required>
+                  <a-textarea
+                    v-model="newAlgorithm.information"
+                    placeholder="请输入"
+                    allow-clear
+                  />
+                </a-form-item>
+
+                <a-form-item field="description" label="详细描述" required>
                   <a-textarea
                     v-model="newAlgorithm.description"
                     placeholder="请输入"
                     allow-clear
                   />
                 </a-form-item>
+
                 <a-form-item field="certification" label="相关材料">
                   <a-space direction="vertical" :style="{ width: '100%' }">
                     <a-upload action="/" @before-upload="beforeUpload" />
                   </a-space>
+                </a-form-item>
+                <a-form-item>
+                  <a-button
+                    style="margin-left: 140px; margin-top: 20px"
+                    html-type="submit"
+                    type="primary"
+                  >
+                    提交
+                  </a-button>
                 </a-form-item>
               </a-form>
             </div>
@@ -124,7 +147,7 @@
               size="large"
               allow-clear="true"
               search-button
-              @input="searchall"
+              @input="searchAlgorithm"
             >
             </a-input-search>
           </a-space>
@@ -143,7 +166,7 @@
                 <a-card
                   hoverable
                   class="algorithm-card"
-                  @click="gotoDetail(item.alid)"
+                  @click="gotoDetail(item._id)"
                 >
                   <template #actions>
                     <span class="icon-hover"> <IconThumbUp /> </span>
@@ -211,51 +234,39 @@
 </template>
       
     <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Modal } from '@arco-design/web-vue';
+import { Message, Modal } from '@arco-design/web-vue';
+import { showAllScene } from '@/api/scene';
+import {
+  showAllAlgorithm,
+  createAlgorithm,
+  findAlgorithm,
+} from '@/api/algorithm';
 
 const router = useRouter();
 
-const data = reactive([
+const data = ref([]);
+const allscene = ref([
   {
-    alid: '1',
-    algorithmname: '异常检测算法',
-    class: '计算机视觉',
-    department: '流程与信息化部',
-    information:
-      '异常检测算法、异常检测(anomaly detecion)是计算机视觉领域的一个热门研究话题，其目标是在不使用真实异样样本的情况下，利用现有的正常样本构建模型以检测可能出现的各种异常图像。在工业外观缺陷检测、医学影像分析、高光谱图像处理等领域有较高的研究意义和应用价值',
-    description:
-      '现有的图像异常检测方法可以分为基于传统方法和基于深度学习的方法两大类别。所示基于传流方法的异常检测技术大致包含六个类脉基于模板四配、基于统计模型、基于图像分解、基于频域分析、基于稀疏编码重构和基于分类面构建的异常检测方法.而基于深度学习的方法大致包含四个类别:基于距离度量、基于分类面构建、基于图像重构和结合传统方法的异常检测方法。使用存陆模块来扩展自动编码器，并开发一种改进的自动编码器，称为内存增强自动编码器，即MemAE。给定输入后，MemAE首先从编码器获取编码，然后将其用作查询以检索最相关的储项以进行重建。在训练阶段，将更新内存内容并鼓励其表示常规数据的原型元素。在测试阶段，将修复学习到的内存，并从一些选定的常规数据存储记录中获得重逮结果。因此，重建将趋于接近正常样本.因此,针对异常的重构错误将得到加强，以进行异常检测。MemAE没有关于数据类型的假设，因此一般可应用于不同的任务，在各种数据集上的实验证明了拟议的IMemAE具有出色的概括性和很高的有效性',
-    scene: {
-      sid: '4',
-      department: '安全部',
-      description: '区域超员智能视频监控',
-      name: '区域超员智能视频监控',
-      status: '未上传',
-      tags: ['质量', '安全', '试飞'],
-      techtag: ['计算机视觉'],
-    },
-    status: '未上传',
-    tags: ['其他'],
-  },
-]);
-
-const newAlgorithm = reactive({
-  alid: '',
-  algorithmname: '',
-  class: '',
-  department: '',
-  information: '',
-  description: '',
-  scene: {
-    sid: '',
     department: '',
     description: '',
     name: '',
     status: '',
     tags: [],
     techtag: [],
+    relPerson: '',
+  },
+]);
+
+const newAlgorithm = reactive({
+  algorithmname: '',
+  class: '',
+  department: '',
+  information: '',
+  description: '',
+  scene: {
+    name: '',
   },
   status: '',
   tags: [],
@@ -263,56 +274,36 @@ const newAlgorithm = reactive({
 
 const search = ref('');
 const visible = ref(false);
-const allscene = reactive([
-  {
-    sid: '1',
-    department: '信息化部',
-    description: 'OCR文字识别',
-    name: 'OCR文字识别',
-    status: '标记中',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '2',
-    department: '安全部',
-    description: 'OCR表格识别',
-    name: 'OCR表格识别',
-    status: '已完成',
-    tags: ['质量', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '3',
-    department: '安全部',
-    description: '仪表识别',
-    name: '仪表识别',
-    status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-  {
-    sid: '4',
-    department: '安全部',
-    description: '区域超员智能视频监控',
-    name: '区域超员智能视频监控',
-    status: '未上传',
-    tags: ['质量', '安全', '试飞'],
-    techtag: ['计算机视觉'],
-  },
-]);
+
+const showAll = () => {
+  showAllAlgorithm()
+    .then((res) => {
+      data.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+const getAllScene = () => {
+  showAllScene()
+    .then((res) => {
+      allscene.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+onMounted(() => {
+  showAll();
+  getAllScene();
+});
 
 const clearForm = () => {
   newAlgorithm.department = '';
   newAlgorithm.class = '';
-  newAlgorithm.scene =  {
-    sid: '',
-    department: '',
-    description: '',
+  newAlgorithm.scene = {
     name: '',
-    status: '',
-    tags: [],
-    techtag: [],
   };
   newAlgorithm.information = '';
   newAlgorithm.description = '';
@@ -326,24 +317,42 @@ const handleClick = () => {
 };
 
 const handleOk = () => {
-  visible.value = false;
+  createAlgorithm(newAlgorithm)
+    .then((res) => {
+      console.log(res);
+      showAll();
+      visible.value = false;
+      clearForm();
+    })
+    .catch((err) => {
+      Message.error(err);
+      console.log(err);
+    });
 };
 
 const handleCancel = () => {
   visible.value = false;
 };
 
-const searchall = () => {};
+const searchAlgorithm = () => {
+  if (search.value !== '') {
+    findAlgorithm({ algorithmname: search.value })
+      .then((res) => {
+        data.value = JSON.parse(JSON.stringify(res.data));
+      })
+      .catch((err: any) => {
+        Message.error(err);
+        console.log(err);
+      });
+  } else {
+    showAll();
+  }
+};
 
-const gotoDetail = (alid: string) => {
-  const item = data.find((item) => {
-    return item.alid === alid;
-  });
-  console.log(item);
-  const obj = JSON.stringify(item);
+const gotoDetail = (_id: string) => {
   router.push({
-    path: `/algorithm/aldetail/${alid}`,
-    query: { item: obj },
+    path: `/algorithm/aldetail/${_id}`,
+    query: { id: _id },
   });
 };
 
