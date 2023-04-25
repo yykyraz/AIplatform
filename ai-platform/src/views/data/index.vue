@@ -1,38 +1,24 @@
-<!--
- * @Author: yykyraz kk@qq.com
- * @Date: 2023-04-01 12:41:07
- * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-03 17:03:29
- * @FilePath: \项目\AIplatform\ai-platform\src\views\data\classic\index.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.data.classic']" />
+    <Breadcrumb :items="['menu.data.dataset']" />
     <div class="mainbox">
-      <div class="algorithm-banner">
+      <div class="dataset-banner">
         <div class="header">
-          <div class="algorithm-info">
-            <span class="algorithm-title">经典数据集 </span>
-            <span class="algorithm-introduction">
+          <div class="dataset-info">
+            <span class="dataset-title">数据集 </span>
+            <span class="dataset-introduction">
               在这里探索、分析和分享优质数据。
             </span>
           </div>
           <a-button
-            class="algorithm-addbuton"
+            class="dataset-addbuton"
             @click="handleClick"
             type="primary"
           >
             <icon-plus />
-            <span class="algorithm-plusword">新建数据集</span>
+            <span class="dataset-plusword">新建数据集</span>
           </a-button>
-          <a-drawer
-            :visible="visible"
-            @ok="handleOk"
-            @cancel="handleCancel"
-            unmountOnClose
-            width="600px"
-          >
+          <a-drawer :visible="visible" unmountOnClose width="600px">
             <template #title>
               <span style="margin-left: 40px">新建数据集</span>
               <span style="margin-left: 30px"
@@ -41,27 +27,34 @@
                 ></span
               >
             </template>
+            <template #footer>
+              <a-button @click="handleCancel">取消</a-button>
+            </template>
             <div>
-              <a-form :model="newDataSet">
-                <a-form-item field="algorithmname" label="数据集名字" required>
+              <a-form :model="newDataSet" @submit-success="handleOk">
+                <a-form-item field="dataname" label="数据集名字" required>
                   <a-input v-model="newDataSet.dataname" placeholder="请输入" />
                 </a-form-item>
 
                 <a-form-item field="department" label="所属部门" required>
-                  <a-input
+                  <a-select
                     v-model="newDataSet.department"
-                    placeholder="请输入"
-                  />
-                </a-form-item>
-
-                <a-form-item field="status" label="状态">
-                  <a-select v-model="newDataSet.status" placeholder="请选择">
-                    <a-option value="未上传">未上传</a-option>
-                    <a-option value="已完成">已上传</a-option>
+                    placeholder="请选择"
+                  >
+                    <a-option value="信息化部">信息化部</a-option>
+                    <a-option value="安全部">安全部</a-option>
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="tags" label="数据集标签" required>
+                <a-form-item field="status" label="状态" required>
+                  <a-select v-model="newDataSet.status" placeholder="请选择">
+                    <a-option value="未上传">未上传</a-option>
+                    <a-option value="标记中">标记中</a-option>
+                    <a-option value="已完成">已完成</a-option>
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item field="tags" label="数据集标签">
                   <a-select
                     v-model="newDataSet.tags"
                     placeholder="请选择"
@@ -80,7 +73,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="algorithm" label="所属场景">
+                <a-form-item field="scene" label="所属场景" required>
                   <a-select
                     v-model="newDataSet.scene.name"
                     placeholder="请选择"
@@ -91,28 +84,41 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="class" label="所属类型" required>
-                  <a-input v-model="newDataSet.class" placeholder="请输入" />
+                <a-form-item field="class" label="所属类型">
+                  <a-select v-model="newDataSet.class" placeholder="请选择">
+                    <a-option value="计算机视觉">计算机视觉</a-option>
+                  </a-select>
                 </a-form-item>
 
                 <a-form-item field="introduction" label="简介" required>
-                  <a-input
+                  <a-textarea
                     v-model="newDataSet.introduction"
                     placeholder="请输入"
+                    :allowClear="true"
                   />
                 </a-form-item>
 
-                <a-form-item field="description" label="描述" required>
+                <a-form-item field="description" label="详情" required>
                   <a-textarea
                     v-model="newDataSet.description"
                     placeholder="请输入"
-                    allow-clear
+                    :allowClear="true"
                   />
                 </a-form-item>
                 <a-form-item field="certification" label="相关材料">
                   <a-space direction="vertical" :style="{ width: '100%' }">
                     <a-upload action="/" @before-upload="beforeUpload" />
                   </a-space>
+                </a-form-item>
+
+                <a-form-item>
+                  <a-button
+                    style="margin-left: 140px; margin-top: 20px"
+                    html-type="submit"
+                    type="primary"
+                  >
+                    提交
+                  </a-button>
                 </a-form-item>
               </a-form>
             </div>
@@ -137,7 +143,7 @@
         </div>
       </div>
       <div class="content">
-        <div class="algorithm-show">
+        <div class="dataset-show">
           <a-list
             :grid-props="{ gutter: 1, span: 8 }"
             :data="data"
@@ -148,8 +154,8 @@
               <a-list-item :key="index">
                 <a-card
                   hoverable
-                  class="algorithm-card"
-                  @click="gotoDetail(item.dataid)"
+                  class="dataset-card"
+                  @click="gotoDetail(item._id)"
                 >
                   <template #actions>
                     <span class="icon-hover"> <IconThumbUp /> </span>
@@ -215,27 +221,26 @@
     </div>
   </div>
 </template>
-        
-      <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+            
+<script lang="ts" setup>
+import { onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Modal } from '@arco-design/web-vue';
+import { Message, Modal } from '@arco-design/web-vue';
+import { showAllScene } from '@/api/scene';
+import { showAllDataset, createDataset, findDataset } from '@/api/dataset';
 
 const router = useRouter();
 
-const data = reactive([
+const data = ref([]);
+const allscene = ref([
   {
-    dataid: '1',
-    dataname: '测试',
-    class: '计算机视觉',
-    department: '流程与信息化部',
-    description: '该数据集通过固定在学校大门上的两个摄像头获得',
-    scene: {
-      name: 'OCR文字识别',
-    },
-    status: '未上传',
-    tags: ['其他'],
-    introduction: '一个测试',
+    department: '',
+    description: '',
+    name: '',
+    status: '',
+    tags: [],
+    techtag: [],
+    relPerson: '',
   },
 ]);
 
@@ -254,12 +259,38 @@ const newDataSet = reactive({
 
 const search = ref('');
 const visible = ref(false);
-const allscene = reactive([{ name: '区域超员智能视频监控' }]);
+
+const showAll = () => {
+  showAllDataset()
+    .then((res) => {
+      data.value = JSON.parse(JSON.stringify(res.data));
+      console.log(data.value);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+const getAllScene = () => {
+  showAllScene()
+    .then((res) => {
+      allscene.value = JSON.parse(JSON.stringify(res.data));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+onMounted(() => {
+  showAll();
+  getAllScene();
+});
 
 const clearForm = () => {
   newDataSet.department = '';
   newDataSet.class = '';
-  newDataSet.scene.name = '';
+  newDataSet.scene = {
+    name: '',
+  };
   newDataSet.description = '';
   newDataSet.dataname = '';
   newDataSet.status = '';
@@ -272,24 +303,43 @@ const handleClick = () => {
 };
 
 const handleOk = () => {
-  visible.value = false;
+  createDataset(newDataSet)
+    .then((res) => {
+      console.log(res);
+      showAll();
+      visible.value = false;
+      clearForm();
+      Message.success('创建数据集成功');
+    })
+    .catch((err) => {
+      Message.error(err);
+      console.log(err);
+    });
 };
 
 const handleCancel = () => {
   visible.value = false;
 };
 
-const searchall = () => {};
+const searchall = () => {
+  if (search.value !== '') {
+    findDataset({ dataname: search.value })
+      .then((res) => {
+        data.value = JSON.parse(JSON.stringify(res.data));
+      })
+      .catch((err: any) => {
+        Message.error(err);
+        console.log(err);
+      });
+  } else {
+    showAll();
+  }
+};
 
-const gotoDetail = (dataid: string) => {
-  const item = data.find((item) => {
-    return item.dataid === dataid;
-  });
-  console.log(item);
-  const obj = JSON.stringify(item);
+const gotoDetail = (_id: string) => {
   router.push({
-    path: `/data/dataSetDetail/${dataid}`,
-    query: { item: obj },
+    path: `/data/dataSetDetail/${_id}`,
+    query: { id: _id },
   });
 };
 
@@ -304,14 +354,14 @@ const beforeUpload = (file: { name: any }) => {
   });
 };
 </script>
-        
-  <script lang="ts">
+            
+      <script lang="ts">
 export default {
   name: '403',
 };
 </script>
-        
-  <style scoped lang="less">
+            
+<style scoped lang="less">
 .container {
   padding: 0 20px 20px 20px;
   height: calc(100% - 40px);
@@ -322,13 +372,13 @@ export default {
 }
 
 .mainbox {
-  background-image: url('@/assets/images/background/backdataset.jpg');
+  background-image: url('@/assets/images/background/backdatasetpro.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: 100% 100%;
 }
 
-.algorithm-banner {
+.dataset-banner {
   box-sizing: border-box;
   -webkit-box-pack: justify;
   justify-content: space-between;
@@ -338,19 +388,19 @@ export default {
   text-align: center;
   padding-top: 30px;
 }
-.algorithm-info {
+.dataset-info {
   float: left;
   margin-left: 15%;
 }
 
-.algorithm-title {
+.dataset-title {
   color: rgb(32, 33, 36);
   font-size: 40px;
   line-height: 44px;
   font-weight: bold;
   font-family: zeitung, sans-serif;
 }
-.algorithm-introduction {
+.dataset-introduction {
   color: rgb(32, 33, 36);
   font-size: 18px;
   font-weight: 400;
@@ -358,7 +408,7 @@ export default {
   max-width: 485px;
   margin-top: 12px;
 }
-.algorithm-addbuton {
+.dataset-addbuton {
   -webkit-box-align: center;
   align-items: center;
   background-color: #004899;
@@ -376,12 +426,12 @@ export default {
   white-space: nowrap;
   width: fit-content;
 }
-.algorithm-plus {
+.dataset-plus {
   color: rgb(255, 255, 255);
   font-size: 20px;
   user-select: none;
 }
-.algorithm-plusword {
+.dataset-plusword {
   color: rgb(255, 255, 255);
   font-size: 14px;
   line-height: 20px;
@@ -394,7 +444,7 @@ export default {
   width: 100%;
   margin-top: 20px;
 }
-.algorithm-show {
+.dataset-show {
   width: 80%;
   margin: 0 auto;
 }
@@ -409,7 +459,7 @@ export default {
   transition: border 0.3s ease 0s;
 }
 
-.algorithm-card {
+.dataset-card {
   border-radius: 16px;
   border: 1px solid rgb(218, 220, 224);
   min-width: 200px;

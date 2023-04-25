@@ -2,7 +2,7 @@
  * @Author: yykyraz kk@qq.com
  * @Date: 2023-03-26 16:41:45
  * @LastEditors: yykyraz kk@qq.com
- * @LastEditTime: 2023-04-25 19:03:04
+ * @LastEditTime: 2023-04-25 19:41:47
  * @FilePath: \项目\AIplatform\ai-platform\src\views\aispace\algorithm\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -58,7 +58,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item field="status" label="状态">
+                <a-form-item field="status" label="状态" required>
                   <a-select v-model="newAlgorithm.status" placeholder="请选择">
                     <a-option value="未上传">未上传</a-option>
                     <a-option value="已完成">已上传</a-option>
@@ -323,6 +323,7 @@ const handleOk = () => {
       showAll();
       visible.value = false;
       clearForm();
+      Message.success('创建算法成功');
     })
     .catch((err) => {
       Message.error(err);
